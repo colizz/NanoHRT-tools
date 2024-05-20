@@ -16,7 +16,16 @@ import logging
 logger = logging.getLogger('nano')
 configLogger('nano', loglevel=logging.INFO)
 
-lumi_dict = {2015: 19.52, 2016: 16.81, 2017: 41.48, 2018: 59.83}
+lumi_dict = {
+    2015: 19.52,
+    2016: 16.81, 
+    2017: 41.48, 
+    2018: 59.83, 
+    2022: 7971.4 / 1000,  # 5.0707 + 3.0063
+    "2022EE": 26337.0 / 1000,
+    2023: 17981.0 / 1000,  # runC
+    "2023BPix": 9516.0 / 1000,  # runD
+}
 
 
 class _NullObject:
@@ -45,7 +54,12 @@ class HeavyFlavBaseProducer(Module, object):
 
     def __init__(self, channel, **kwargs):
         self._channel = channel  # 'qcd', 'photon', 'inclusive', 'muon'
-        self.year = int(kwargs['year'])
+        try:
+            self.year = int(kwargs['year'])
+        except ValueError:
+            self.year = int(kwargs['year'][:5])
+        self.is_run3 = (self.year >= 2022)
+        self.year_str = kwargs['year']
         self.jetType = kwargs.get('jetType', 'ak8').lower()
         self._jmeSysts = {'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
                           'jer': None, 'jmr': None, 'met_unclustered': None, 'smearMET': True, 'applyHEMUnc': False,
@@ -119,9 +133,9 @@ class HeavyFlavBaseProducer(Module, object):
                     version=ver, cache_suffix='mass') for ver in self._opts['mass_regression_versions']]
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation
-        self.DeepJet_WP_L = {2015: 0.0508, 2016: 0.0480, 2017: 0.0532, 2018: 0.0490}[self.year]
-        self.DeepJet_WP_M = {2015: 0.2598, 2016: 0.2489, 2017: 0.3040, 2018: 0.2783}[self.year]
-        self.DeepJet_WP_T = {2015: 0.6502, 2016: 0.6377, 2017: 0.7476, 2018: 0.7100}[self.year]
+        self.DeepJet_WP_L = {2015: 0.0508, 2016: 0.0480, 2017: 0.0532, 2018: 0.0490, 2022: 0.0490}[self.year]
+        self.DeepJet_WP_M = {2015: 0.2598, 2016: 0.2489, 2017: 0.3040, 2018: 0.2783, 2022: 0.2783}[self.year]
+        self.DeepJet_WP_T = {2015: 0.6502, 2016: 0.6377, 2017: 0.7476, 2018: 0.7100, 2022: 0.7100}[self.year]
 
     def beginJob(self):
         if self._needsJMECorr:
@@ -187,7 +201,8 @@ class HeavyFlavBaseProducer(Module, object):
             self.out.branch(prefix + "regressed_mass", "F")
             self.out.branch(prefix + "tau21", "F")
             self.out.branch(prefix + "tau32", "F")
-            self.out.branch(prefix + "btagcsvv2", "F")
+            if not self.is_run3:
+                self.out.branch(prefix + "btagcsvv2", "F")
             self.out.branch(prefix + "btagjp", "F")
 
             # subjets
@@ -219,13 +234,22 @@ class HeavyFlavBaseProducer(Module, object):
             self.out.branch(prefix + "ParticleNet_TvsQCD", "F")
             self.out.branch(prefix + "ParticleNet_WvsQCD", "F")
             self.out.branch(prefix + "ParticleNet_ZvsQCD", "F")
-            self.out.branch(prefix + "ParticleNetMD_Xbb", "F")
-            self.out.branch(prefix + "ParticleNetMD_Xcc", "F")
-            self.out.branch(prefix + "ParticleNetMD_Xqq", "F")
-            self.out.branch(prefix + "ParticleNetMD_QCD", "F")
-            self.out.branch(prefix + "ParticleNetMD_XbbVsQCD", "F")
-            self.out.branch(prefix + "ParticleNetMD_XccVsQCD", "F")
-            self.out.branch(prefix + "ParticleNetMD_XccOrXqqVsQCD", "F")
+            if not self.is_run3:
+                self.out.branch(prefix + "ParticleNetMD_Xbb", "F")
+                self.out.branch(prefix + "ParticleNetMD_Xcc", "F")
+                self.out.branch(prefix + "ParticleNetMD_Xqq", "F")
+                self.out.branch(prefix + "ParticleNetMD_QCD", "F")
+                self.out.branch(prefix + "ParticleNetMD_XbbVsQCD", "F")
+                self.out.branch(prefix + "ParticleNetMD_XccVsQCD", "F")
+                self.out.branch(prefix + "ParticleNetMD_XccOrXqqVsQCD", "F")
+            else:
+                self.out.branch(prefix + "ParticleNetLegacy_Xbb", "F")
+                self.out.branch(prefix + "ParticleNetLegacy_Xcc", "F")
+                self.out.branch(prefix + "ParticleNetLegacy_Xqq", "F")
+                self.out.branch(prefix + "ParticleNetLegacy_QCD", "F")
+                self.out.branch(prefix + "ParticleNet_XbbVsQCD", "F")
+                self.out.branch(prefix + "ParticleNet_XccVsQCD", "F")
+                self.out.branch(prefix + "ParticleNet_XccOrXqqVsQCD", "F")
             # Additional tagger scores from NanoAODv9
             self.out.branch(prefix + "DeepAK8MD_HbbvsQCD", "F")
             self.out.branch(prefix + "DeepAK8MD_H4qvsQCD", "F")
@@ -374,9 +398,15 @@ class HeavyFlavBaseProducer(Module, object):
         electrons = Collection(event, "Electron")
         for el in electrons:
             el.etaSC = el.eta + el.deltaEtaSC
+            if not self.is_run3:
+                electron_mvaIso_WP90 = el.mvaFall17V2noIso_WP90
+            else:
+                # Run 3
+                electron_mvaIso_WP90 = el.mvaIso_WP90
+
             if el.pt > 10 and abs(el.eta) < 2.5 and abs(el.dxy) < 0.05 and abs(el.dz) < 0.2 \
-                    and el.mvaFall17V2noIso_WP90 and el.miniPFRelIso_all < 0.4:
-                event.looseLeptons.append(el)
+                and electron_mvaIso_WP90 and el.miniPFRelIso_all < 0.4:
+                    event.looseLeptons.append(el)
 
         muons = Collection(event, "Muon")
         for mu in muons:
@@ -400,7 +430,15 @@ class HeavyFlavBaseProducer(Module, object):
         #     j.pt = j.rawP4.pt()
         #     j.mass = j.rawP4.mass()
         if self._needsJMECorr:
-            rho = event.fixedGridRhoFastjetAll
+            if not self.is_run3:
+                rho = event.fixedGridRhoFastjetAll
+            else:
+                # Run 3
+                # print(f"event: {event._tree}")
+                # branches = event._tree.GetListOfBranches()
+                # branch_names = [branch.GetName() for branch in branches]
+                # print(f"event._tree Branch names: {branch_names}")
+                rho = event.Rho_fixedGridRhoFastjetAll
             # correct AK4 jets and MET
             self.jetmetCorr.setSeed(rndSeed(event, event._allJets))
             self.jetmetCorr.correctJetAndMET(jets=event._allJets, lowPtJets=Collection(event, "CorrT1METJet"),
@@ -636,24 +674,48 @@ class HeavyFlavBaseProducer(Module, object):
             if self._opts['run_tagger']:
                 outputs = [p.predict_with_cache(self.tagInfoMaker, event.idx, j.idx, j) for p in self.pnTaggers]
                 outputs = ensemble(outputs, np.mean)
-                j.pn_Xbb = outputs['probXbb']
-                j.pn_Xcc = outputs['probXcc']
-                j.pn_Xqq = outputs['probXqq']
-                j.pn_QCD = convert_prob(outputs, None, prefix='prob')
+                try:
+                    j.pn_Xbb = outputs['probXbb']
+                    j.pn_Xcc = outputs['probXcc']
+                    j.pn_Xqq = outputs['probXqq']
+                    j.pn_QCD = convert_prob(outputs, None, prefix='prob')
+                except RuntimeError:
+                    # TODO: may need to update this in Run 3
+                    raise NotImplementedError("Need to update for Run 3")
             else:
                 if self.hasParticleNetProb:
-                    j.pn_Xbb = j.ParticleNetMD_probXbb
-                    j.pn_Xcc = j.ParticleNetMD_probXcc
-                    j.pn_Xqq = j.ParticleNetMD_probXqq
-                    j.pn_QCD = convert_prob(j, None, prefix='ParticleNetMD_prob')
+                    try:
+                        j.pn_Xbb = j.ParticleNetMD_probXbb
+                        j.pn_Xcc = j.ParticleNetMD_probXcc
+                        j.pn_Xqq = j.ParticleNetMD_probXqq
+                        j.pn_QCD = convert_prob(j, None, prefix='ParticleNetMD_prob')
+                    except RuntimeError:
+                        # TODO: may need to update this in Run 3
+                        raise NotImplementedError("Need to update for Run 3")
                 else:
-                    j.pn_Xbb = j.particleNetMD_Xbb
-                    j.pn_Xcc = j.particleNetMD_Xcc
-                    j.pn_Xqq = j.particleNetMD_Xqq
-                    j.pn_QCD = j.particleNetMD_QCD
-            j.pn_XbbVsQCD = convert_prob(j, ['Xbb'], ['QCD'], prefix='pn_')
-            j.pn_XccVsQCD = convert_prob(j, ['Xcc'], ['QCD'], prefix='pn_')
-            j.pn_XccOrXqqVsQCD = convert_prob(j, ['Xcc', 'Xqq'], ['QCD'], prefix='pn_')
+                    if not self.is_run3:
+                        j.pn_Xbb = j.particleNetMD_Xbb
+                        j.pn_Xcc = j.particleNetMD_Xcc
+                        j.pn_Xqq = j.particleNetMD_Xqq
+                        j.pn_QCD = j.particleNetMD_QCD
+                    else:
+                        # Run 3
+                        j.pn_legacy_Xbb = j.particleNetLegacy_Xbb
+                        j.pn_legacy_Xcc = j.particleNetLegacy_Xcc
+                        j.pn_legacy_Xqq = j.particleNetLegacy_Xqq
+                        j.pn_legacy_QCD = j.particleNetLegacy_QCD
+                        
+            if not self.is_run3:            
+                j.pn_XbbVsQCD = convert_prob(j, ['Xbb'], ['QCD'], prefix='pn_')
+                j.pn_XccVsQCD = convert_prob(j, ['Xcc'], ['QCD'], prefix='pn_')
+                j.pn_XccOrXqqVsQCD = convert_prob(j, ['Xcc', 'Xqq'], ['QCD'], prefix='pn_')
+            else:
+                # Run 3
+                j.pn_XbbVsQCD = j.particleNet_XbbVsQCD
+                j.pn_XccVsQCD = j.particleNet_XccVsQCD
+                pn_XqqVsQCD = j.particleNet_XqqVsQCD
+                # j.pn_QCD = j.particleNet_QCD
+                j.pn_XccOrXqqVsQCD = j.pn_XccVsQCD + pn_XqqVsQCD
 
     def evalMassRegression(self, event, jets):
         for j in jets:
@@ -669,7 +731,7 @@ class HeavyFlavBaseProducer(Module, object):
     def fillBaseEventInfo(self, event):
         self.out.fillBranch("jetR", self._jetConeSize)
         self.out.fillBranch("year", self.year)
-        self.out.fillBranch("lumiwgt", lumi_dict[self.year])
+        self.out.fillBranch("lumiwgt", lumi_dict[self.year_str])
 
         met_filters = bool(
             event.Flag_goodVertices and
@@ -735,7 +797,11 @@ class HeavyFlavBaseProducer(Module, object):
             self.out.fillBranch(prefix + "regressed_mass", fj.regressed_mass)
             self.out.fillBranch(prefix + "tau21", fj.tau2 / fj.tau1 if fj.tau1 > 0 else 99)
             self.out.fillBranch(prefix + "tau32", fj.tau3 / fj.tau2 if fj.tau2 > 0 else 99)
-            self.out.fillBranch(prefix + "btagcsvv2", fj.btagCSVV2)
+            if not self.is_run3:
+                self.out.fillBranch(prefix + "btagcsvv2", fj.btagCSVV2)
+            else:
+                # Run 3: not used
+                pass
             try:
                 self.out.fillBranch(prefix + "btagjp", fj.btagJP)
             except RuntimeError:
@@ -813,13 +879,22 @@ class HeavyFlavBaseProducer(Module, object):
                     self.out.fillBranch(prefix + "ParticleNet_ZvsQCD", -1)
 
             # ParticleNet-MD
-            self.out.fillBranch(prefix + "ParticleNetMD_Xbb", fj.pn_Xbb)
-            self.out.fillBranch(prefix + "ParticleNetMD_Xcc", fj.pn_Xcc)
-            self.out.fillBranch(prefix + "ParticleNetMD_Xqq", fj.pn_Xqq)
-            self.out.fillBranch(prefix + "ParticleNetMD_QCD", fj.pn_QCD)
-            self.out.fillBranch(prefix + "ParticleNetMD_XbbVsQCD", fj.pn_XbbVsQCD)
-            self.out.fillBranch(prefix + "ParticleNetMD_XccVsQCD", fj.pn_XccVsQCD)
-            self.out.fillBranch(prefix + "ParticleNetMD_XccOrXqqVsQCD", fj.pn_XccOrXqqVsQCD)
+            if not self.is_run3:
+                self.out.fillBranch(prefix + "ParticleNetMD_Xbb", fj.pn_Xbb)
+                self.out.fillBranch(prefix + "ParticleNetMD_Xcc", fj.pn_Xcc)
+                self.out.fillBranch(prefix + "ParticleNetMD_Xqq", fj.pn_Xqq)
+                self.out.fillBranch(prefix + "ParticleNetMD_QCD", fj.pn_QCD)
+                self.out.fillBranch(prefix + "ParticleNetMD_XbbVsQCD", fj.pn_XbbVsQCD)
+                self.out.fillBranch(prefix + "ParticleNetMD_XccVsQCD", fj.pn_XccVsQCD)
+                self.out.fillBranch(prefix + "ParticleNetMD_XccOrXqqVsQCD", fj.pn_XccOrXqqVsQCD)
+            else:
+                self.out.fillBranch(prefix + "ParticleNetLegacy_Xbb", fj.pn_legacy_Xbb)
+                self.out.fillBranch(prefix + "ParticleNetLegacy_Xcc", fj.pn_legacy_Xcc)
+                self.out.fillBranch(prefix + "ParticleNetLegacy_Xqq", fj.pn_legacy_Xqq)
+                self.out.fillBranch(prefix + "ParticleNetLegacy_QCD", fj.pn_legacy_QCD)
+                self.out.fillBranch(prefix + "ParticleNet_XbbVsQCD", fj.pn_XbbVsQCD)
+                self.out.fillBranch(prefix + "ParticleNet_XccVsQCD", fj.pn_XccVsQCD)
+                self.out.fillBranch(prefix + "ParticleNet_XccOrXqqVsQCD", fj.pn_XccOrXqqVsQCD)
 
             if self._opts['run_tagger']:
                 self.out.fillBranch(prefix + "origParticleNetMD_XccVsQCD",

@@ -23,6 +23,8 @@ def find_and_extract_tarball(name, destination, copy_txt_with_prefix=None):
                     tar.extractall(destination)
                 print('... extracted %s to %s' % (fullpath, destination))
                 return fullpath
+    
+    raise RuntimeError('Could not find tarball %s in %s' % (name, search_pathes))
 
 
 def match(jet, genjets, resolution, dr2cut=0.04, dptcut=3):

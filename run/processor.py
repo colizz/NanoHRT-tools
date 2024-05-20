@@ -94,7 +94,7 @@ def main(args):
     p.run()
 
     # hadd files
-    p = subprocess.Popen('haddnano.py %s *.root' % outputname, shell=True)
+    p = subprocess.Popen('alias python=python3; haddnano.py %s *.root' % outputname, shell=True)
     p.communicate()
     if p.returncode != 0:
         raise RuntimeError('Hadd failed!')

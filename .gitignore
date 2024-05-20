@@ -6,3 +6,4 @@
 .DS_Store
 run/jobs_*
 __pycache__
+*.pyc

@@ -17,6 +17,12 @@ keep HLT_Ele32_WPTight_Gsf_L1DoubleEG
 keep HLT_Ele35_WPTight_Gsf
 keep HLT_PFMET*_PFMHT*_IDTight*
 keep HLT_BTagMu_*Jet300_Mu5*
+keep HLT_AK8PFJet250_SoftDropMass40_PFAK8ParticleNetBB0p35
+keep HLT_AK8PFJet230_SoftDropMass40_PNetBB0p06
+keep HLT_AK8PFJet230_SoftDropMass40
+keep HLT_AK8PFJet425_SoftDropMass40
+keep HLT_AK8PFJet420_MassSD30
+
 keepmatch HLT_PFHT[0-9]+
 # genweight
 keep genWeight
