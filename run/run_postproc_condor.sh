@@ -1,6 +1,7 @@
 #!/bin/bash
 
-alias python=python3
+alias python=python3;
+wget https://raw.githubusercontent.com/cms-nanoAOD/nanoAOD-tools/master/scripts/haddnano.py;
 
 workdir=`pwd`
 

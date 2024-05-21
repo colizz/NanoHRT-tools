@@ -95,7 +95,7 @@ def main(args):
 
     # hadd files
     p = subprocess.Popen(
-        'alias python=python3; haddnano.py %s *.root' % outputname, 
+        'alias python=python3; python3 ./haddnano.py %s *.root' % outputname, 
         shell=True, 
         stdout=subprocess.PIPE, 
         stderr=subprocess.PIPE, 
