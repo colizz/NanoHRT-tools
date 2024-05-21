@@ -111,7 +111,10 @@ class HeavyFlavBaseProducer(Module, object):
         self._fill_sv = self._channel in ('qcd', 'photon', 'higgs', 'inclusive') and self._opts['sfbdt_threshold'] > -99
 
         if self._needsJMECorr:
-            self.jetmetCorr = JetMETCorrector(year=self.year, jetType="AK4PFchs", **self._jmeSysts)
+            if not self.is_run3:
+                self.jetmetCorr = JetMETCorrector(year=self.year, jetType="AK4PFchs", **self._jmeSysts)
+            else:
+                self.jetmetCorr = JetMETCorrector(year=self.year, jetType="AK4PFPuppi", **self._jmeSysts)
             self.fatjetCorr = JetMETCorrector(year=self.year, jetType="AK8PFPuppi", **self._jmeSysts)
             self.subjetCorr = JetMETCorrector(year=self.year, jetType="AK4PFPuppi", **self._jmeSysts)
 
@@ -139,6 +142,7 @@ class HeavyFlavBaseProducer(Module, object):
 
     def beginJob(self):
         if self._needsJMECorr:
+            # if not self.is_run3:
             self.jetmetCorr.beginJob()
             self.fatjetCorr.beginJob()
             self.subjetCorr.beginJob()
@@ -442,10 +446,10 @@ class HeavyFlavBaseProducer(Module, object):
             # correct AK4 jets and MET
             self.jetmetCorr.setSeed(rndSeed(event, event._allJets))
             self.jetmetCorr.correctJetAndMET(jets=event._allJets, lowPtJets=Collection(event, "CorrT1METJet"),
-                                             met=event.met, rawMET=METObject(event, "RawMET"),
-                                             defaultMET=METObject(event, "MET"),
-                                             rho=rho, genjets=Collection(event, 'GenJet') if self.isMC else None,
-                                             isMC=self.isMC, runNumber=event.run)
+                                            met=event.met, rawMET=METObject(event, "RawMET"),
+                                            defaultMET=METObject(event, "MET"),
+                                            rho=rho, genjets=Collection(event, 'GenJet') if self.isMC else None,
+                                            isMC=self.isMC, runNumber=event.run)
             event._allJets = sorted(event._allJets, key=lambda x: x.pt, reverse=True)  # sort by pt after updating
 
             # correct fatjets
@@ -495,8 +499,7 @@ class HeavyFlavBaseProducer(Module, object):
         for sv in event._allSV:
             # if sv.ntracks > 2 and abs(sv.dxy) < 3. and sv.dlenSig > 4:
             # if sv.dlenSig > 4:
-            if True:
-                event.secondary_vertices.append(sv)
+            event.secondary_vertices.append(sv)
         event.secondary_vertices = sorted(event.secondary_vertices, key=lambda x: x.pt, reverse=True)  # sort by pt
         # event.secondary_vertices = sorted(event.secondary_vertices, key=lambda x : x.dxySig, reverse=True)  # sort by dxysig
 

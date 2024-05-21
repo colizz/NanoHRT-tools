@@ -94,10 +94,16 @@ def main(args):
     p.run()
 
     # hadd files
-    p = subprocess.Popen('alias python=python3; haddnano.py %s *.root' % outputname, shell=True)
-    p.communicate()
+    p = subprocess.Popen(
+        'alias python=python3; haddnano.py %s *.root' % outputname, 
+        shell=True, 
+        stdout=subprocess.PIPE, 
+        stderr=subprocess.PIPE, 
+        text=True
+    )
+    stdout, stderr = p.communicate()
     if p.returncode != 0:
-        raise RuntimeError('Hadd failed!')
+        raise RuntimeError(f'Hadd failed with error message: {stderr.strip()}')
 
     # keep only the hadd file
     for f in os.listdir('.'):

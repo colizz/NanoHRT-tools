@@ -35,8 +35,9 @@ def _sf(vals, syst='nominal'):
 class JetCorrector(object):
 
     def __init__(self, globalTag, jetType, jecPath, applyResidual=True):
-        self.jecLevels = ['L2Relative', 'L3Absolute'] if 'Puppi' in jetType else [
-            'L1FastJet', 'L2Relative', 'L3Absolute']
+        # self.jecLevels = ['L2Relative', 'L3Absolute'] if 'Puppi' in jetType else [
+        #     'L1FastJet', 'L2Relative', 'L3Absolute']
+        self.jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
         if applyResidual:
             self.jecLevels += ['L2L3Residual']
         self.vPar = ROOT.vector(ROOT.JetCorrectorParameters)()
@@ -163,12 +164,9 @@ class JetMETCorrector(object):
             self.jerTag = 'Summer22_22Sep2023_JRV1_MC'
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer22_22Sep2023_V2_MC'),
+                (0, 'Summer22_22Sep2023_RunCD_V1_DATA'),
                 # (start run number (inclusive), 'tag name')
-                (315252, 'Summer22_22Sep2023_V2_MC'),
-                (316998, 'Summer22_22Sep2023_V2_MC'),
-                (319313, 'Summer22_22Sep2023_V2_MC'),
-                (320394, 'Summer22_22Sep2023_V2_MC'),
+                (315252, 'Summer22_22Sep2023_RunCD_V2_DATA'),
             )
         else:
             raise RuntimeError('Invalid year: %s' % (str(self.year)))
