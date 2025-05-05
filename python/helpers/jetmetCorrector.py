@@ -157,7 +157,8 @@ class JetMETCorrector(object):
                 (319313, 'Summer19UL18_RunC_V5_DATA'),
                 (320394, 'Summer19UL18_RunD_V5_DATA'),
             )
-        elif self.year == 2022:
+        elif self.year == 20220:
+            # hack, actually 2022 pre EE
             self.globalTag = 'Summer22_22Sep2023_V2_MC'
             self.jerTag = 'Summer22_22Sep2023_JRV1_MC'
             self.dataTags = (
@@ -166,8 +167,8 @@ class JetMETCorrector(object):
                 # (start run number (inclusive), 'tag name')
                 (355794, 'Summer22_22Sep2023_RunCD_V2_DATA'),
             )
-        elif self.year == 2023:
-            # hack, actually 2022EE
+        elif self.year == 20221:
+            # hack, actually 2022 post EE
             self.globalTag = 'Summer22EE_22Sep2023_V2_MC'
             self.jerTag = 'Summer22EE_22Sep2023_JRV1_MC'
             self.dataTags = (
@@ -264,6 +265,7 @@ class JetMETCorrector(object):
             if self.jer in ['up', 'down']:
                 delta -= nominalP4 * (jet._smearFactor - jet._smearFactorNominal)
             if self.jes in ['up', 'down']:
+                print(delta)
                 delta -= nominalP4 * (jet._jesUncFactor - 1)
             if self.applyHEMUnc:
                 delta -= nominalP4 * (jet._HEMUncFactor - 1)
