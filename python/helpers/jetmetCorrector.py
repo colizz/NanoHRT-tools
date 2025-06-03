@@ -175,9 +175,9 @@ class JetMETCorrector(object):
                 # set the name of the tarball with a dummy run number
                 (0, 'Summer22EE_22Sep2023_V2_DATA'),
                 # (start run number (inclusive), 'tag name')
-                (358220, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
-                (359022, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
-                (360332, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
+                (359022, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
+                (360332, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
+                (362350, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
             )
         else:
             raise RuntimeError('Invalid year: %s' % (str(self.year)))
@@ -265,7 +265,6 @@ class JetMETCorrector(object):
             if self.jer in ['up', 'down']:
                 delta -= nominalP4 * (jet._smearFactor - jet._smearFactorNominal)
             if self.jes in ['up', 'down']:
-                print(delta)
                 delta -= nominalP4 * (jet._jesUncFactor - 1)
             if self.applyHEMUnc:
                 delta -= nominalP4 * (jet._HEMUncFactor - 1)
