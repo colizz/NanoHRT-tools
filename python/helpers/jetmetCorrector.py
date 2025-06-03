@@ -157,7 +157,8 @@ class JetMETCorrector(object):
                 (319313, 'Summer19UL18_RunC_V5_DATA'),
                 (320394, 'Summer19UL18_RunD_V5_DATA'),
             )
-        elif self.year == 2022:
+        elif self.year == 20220:
+            # hack, actually 2022 pre EE
             self.globalTag = 'Summer22_22Sep2023_V2_MC'
             self.jerTag = 'Summer22_22Sep2023_JRV1_MC'
             self.dataTags = (
@@ -166,17 +167,17 @@ class JetMETCorrector(object):
                 # (start run number (inclusive), 'tag name')
                 (355794, 'Summer22_22Sep2023_RunCD_V2_DATA'),
             )
-        elif self.year == 2023:
-            # hack, actually 2022EE
+        elif self.year == 20221:
+            # hack, actually 2022 post EE
             self.globalTag = 'Summer22EE_22Sep2023_V2_MC'
             self.jerTag = 'Summer22EE_22Sep2023_JRV1_MC'
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
                 (0, 'Summer22EE_22Sep2023_V2_DATA'),
                 # (start run number (inclusive), 'tag name')
-                (358220, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
-                (359022, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
-                (360332, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
+                (359022, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
+                (360332, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
+                (362350, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
             )
         else:
             raise RuntimeError('Invalid year: %s' % (str(self.year)))

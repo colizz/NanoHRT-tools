@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger('nano')
 configLogger('nano', loglevel=logging.INFO)
 
-lumi_dict = {2015: 19.52, 2016: 16.81, 2017: 41.48, 2018: 59.83,2022: 7.98, 2023: 26.67}
+lumi_dict = {2015: 19.52, 2016: 16.81, 2017: 41.48, 2018: 59.83,20220: 7.98, 20221: 26.67}
 
 
 class _NullObject:
@@ -120,9 +120,9 @@ class HeavyFlavBaseProducer(Module, object):
                     version=ver, cache_suffix='mass') for ver in self._opts['mass_regression_versions']]
 
         # https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation
-        self.DeepJet_WP_L = {2015: 0.0508, 2016: 0.0480, 2017: 0.0532, 2018: 0.0490,2022: 0.0583,2023: 0.0614}[self.year]
-        self.DeepJet_WP_M = {2015: 0.2598, 2016: 0.2489, 2017: 0.3040, 2018: 0.2783,2022: 0.3086,2023: 0.3196}[self.year]
-        self.DeepJet_WP_T = {2015: 0.6502, 2016: 0.6377, 2017: 0.7476, 2018: 0.7100,2022: 0.7183,2023: 0.7300}[self.year]
+        self.DeepJet_WP_L = {2015: 0.0508, 2016: 0.0480, 2017: 0.0532, 2018: 0.0490,20220: 0.0583,20221: 0.0614}[self.year]
+        self.DeepJet_WP_M = {2015: 0.2598, 2016: 0.2489, 2017: 0.3040, 2018: 0.2783,20220: 0.3086,20221: 0.3196}[self.year]
+        self.DeepJet_WP_T = {2015: 0.6502, 2016: 0.6377, 2017: 0.7476, 2018: 0.7100,20220: 0.7183,20221: 0.7300}[self.year]
 
     def beginJob(self):
         if self._needsJMECorr:
@@ -598,7 +598,7 @@ class HeavyFlavBaseProducer(Module, object):
             event.Flag_BadPFMuonDzFilter and
             event.Flag_eeBadScFilter
         )
-        if self.year in (2017, 2018, 2022, 2023):
+        if self.year in (2017, 2018, 20220, 20221):
             met_filters = met_filters and event.Flag_ecalBadCalibFilter
         self.out.fillBranch("passmetfilters", met_filters)
 
@@ -619,9 +619,9 @@ class HeavyFlavBaseProducer(Module, object):
         
         event.vetomap_ak4jets = [j for j in event._allJets if j.pt > 15 and (j.chEmEF + j.neEmEF) < 0.9  and (j.jetId & 2) and closest(j, event.looseMuons)[1] >= 0.2]
         #Jets Veto Maps
-        if self.year == 2022:
+        if self.year == 20220:
             vetomaps_file = ROOT.TFile.Open("/afs/cern.ch/user/l/lpaizano/JME_Trees/CMSSW_11_1_0_pre5_PY3/src/PhysicsTools/NanoHRTTools/data/jme/jet_veto_maps/Summer22_23Sep2023/Summer22_23Sep2023_RunCD_v1.root","READ")
-        elif self.year == 2023:
+        elif self.year == 20221:
             vetomaps_file = ROOT.TFile.Open("/afs/cern.ch/user/l/lpaizano/JME_Trees/CMSSW_11_1_0_pre5_PY3/src/PhysicsTools/NanoHRTTools/data/jme/jet_veto_maps/Summer22EE_23Sep2023/Summer22EE_23Sep2023_RunEFG_v1.root","READ")
         vetomaps_hist = vetomaps_file.Get("jetvetomap") 
 

@@ -37,8 +37,8 @@ golden_json = {
     2016: 'Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt',
     2017: 'Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt',
     2018: 'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
-    2022: 'Cert_Collisions2022_355100_362760_Golden.json',
-    2023: 'Cert_Collisions2022_355100_362760_Golden.json',
+    20220: 'Cert_Collisions2022_355100_362760_Golden.json',
+    20221: 'Cert_Collisions2022_355100_362760_Golden.json',
 
 }
 
@@ -183,7 +183,7 @@ def main():
     parser.add_argument('--year',
                         type=str,
                         required=True,
-                        help='Year: 2015 (2016 preVFP), 2016 (2016 postVFP), 2017, 2018,2022,2023 or comma separated list e.g., `2016,2017,2018`'
+                        help='Year: 2015 (2016 preVFP), 2016 (2016 postVFP), 2017, 2018,20220,20221 or comma separated list e.g., `2016,2017,2018`'
                         )
 
     parser.add_argument('--sample-dir',
