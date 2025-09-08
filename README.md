@@ -3,27 +3,17 @@
 ### Set up CMSSW and offcial NanoAOD-tools
 
 ```bash
-cmsrel CMSSW_11_1_0_pre5
-cd CMSSW_11_1_0_pre5/src
+cmsrel CMSSW_11_1_0_pre5_PY3
+cd CMSSW_11_1_0_pre5_PY3/src
 cmsenv
 
 git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools
 ```
 
-**Alternatively, set up CMSSW and offcial NanoAOD-tools with Python3 support. This is needed to re-run the taggers w/ `ONNXRuntime`.**
-
-```bash
-cmsrel CMSSW_11_1_0_pre5_PY3
-cd CMSSW_11_1_0_pre5_PY3/src
-cmsenv
-
-git clone https://github.com/hqucms/nanoAOD-tools.git PhysicsTools/NanoAODTools
-```
-
 ### Get customized NanoAOD tools for HeavyResTagging (NanoHRT-tools)
 
 ```bash
-git clone https://github.com/hqucms/NanoHRT-tools.git PhysicsTools/NanoHRTTools -b dev/unify-producer
+git clone https://github.com/hqucms/NanoHRT-tools.git PhysicsTools/NanoHRTTools -b dev/UL
 ```
 
 ### Compile
@@ -115,3 +105,15 @@ Top quark is treated a bit differently:
  - W(cx)-matched:
    - `((fj_1_T_Wq_max_pdgId==0 && fj_1_dr_W_daus<jetR && fj_1_W_decay==4) || (fj_1_T_Wq_max_pdgId!=0 && fj_1_dr_T_b>=jetR && fj_1_dr_T_Wq_max<jetR && (abs(fj_1_T_Wq_max_pdgId)==4 || abs(fj_1_T_Wq_min_pdgId)==4)))`
 
+### Checklist when updating to new data-taking years / production campaigns
+
+- [ ] triggers
+- [ ] lumi values
+- [ ] golden JSON
+- [ ] PU rewgt
+- [ ] lepton ID/ISO
+- [ ] b-tag WP
+- [ ] JEC/JER
+- [ ] MET filters
+- [ ] MET recipes (if any)
+- [ ] samples (check also those in PRODUCTION status)

@@ -46,7 +46,7 @@ class MuonSampleProducer(HeavyFlavBaseProducer):
             return False
 
         # at least one b-jet, in the same hemisphere of the muon
-        event.bjets = [j for j in event.ak4jets if j.btagDeepB > self.DeepCSV_WP_M and
+        event.bjets = [j for j in event.ak4jets if j.btagDeepFlavB > self.DeepJet_WP_M and
                        abs(deltaPhi(j, event.mu)) < 2]
         if len(event.bjets) == 0:
             return False
@@ -79,3 +79,5 @@ class MuonSampleProducer(HeavyFlavBaseProducer):
 def MuonTree_2016(): return MuonSampleProducer(year=2016)
 def MuonTree_2017(): return MuonSampleProducer(year=2017)
 def MuonTree_2018(): return MuonSampleProducer(year=2018)
+def MuonTree_20220(): return MuonSampleProducer(year=20220)
+def MuonTree_20221(): return MuonSampleProducer(year=20221)
