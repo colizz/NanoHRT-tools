@@ -39,7 +39,7 @@ golden_json = {
     2018: 'Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt',
     20220: 'Cert_Collisions2022_355100_362760_Golden.json',
     20221: 'Cert_Collisions2022_355100_362760_Golden.json',
-
+    2024: 'Cert_Collisions2024_378981_386951_Golden.json',
 }
 
 
