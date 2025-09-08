@@ -16,7 +16,7 @@ class QCDSampleProducer(HeavyFlavBaseProducer):
 
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
-
+    
         self.selectLeptons(event)
         self.correctJetsAndMET(event)
 
@@ -62,3 +62,4 @@ class QCDSampleProducer(HeavyFlavBaseProducer):
 def QCDTree_2016(): return QCDSampleProducer(year=2016)
 def QCDTree_2017(): return QCDSampleProducer(year=2017)
 def QCDTree_2018(): return QCDSampleProducer(year=2018)
+def QCDTree_2024(): return QCDSampleProducer(year=2024)
