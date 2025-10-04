@@ -306,6 +306,11 @@ def create_metadata(args):
                         raise RuntimeError('Inconsistent dataset for samp `%s`: `%s` vs `%s`' % (samp, dataset0, dataset))
                 if select_sample(dataset):
                     filelist.extend(get_filenames(dataset))
+                    ### a hack to shorten the filelist for testing
+                    if dataset.startswith('/QCD'):
+                        filelist = filelist[:20]
+                    else:
+                        filelist = filelist[:5]
             if len(filelist):
                 filelist = sorted(filelist)
                 md['samples'].append(samp)
@@ -473,6 +478,7 @@ Should_Transfer_Files = YES
 initialdir            = {initialdir}
 WhenToTransferOutput  = ON_EXIT
 want_graceful_removal = true
+MY.WantOS             = "el7"
 on_exit_remove        = (ExitBySignal == False) && (ExitCode == 0)
 on_exit_hold          = ( (ExitBySignal == True) || (ExitCode != 0) )
 on_exit_hold_reason   = strcat("Job held by ON_EXIT_HOLD due to ", ifThenElse((ExitBySignal == True), "exit by signal", strcat("exit code ",ExitCode)), ".")

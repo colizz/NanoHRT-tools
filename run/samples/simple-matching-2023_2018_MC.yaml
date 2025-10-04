@@ -1,0 +1,10 @@
+# 25.10 NanoAOD v15 validation samples
+
+qcd600to800:
+ - /QCD_PT-600to800_TuneCP5_13p6TeV_pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM
+
+ttbarsl:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM
+
+gghbb:
+ - /GluGluHto2B_PT-200_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM

@@ -5,4 +5,11 @@
 .settings/
 .DS_Store
 run/jobs_*
+*.d
+*.so
+*.pcm
+*.pyc
+dummy.cc
+log
+__init__.py
 __pycache__

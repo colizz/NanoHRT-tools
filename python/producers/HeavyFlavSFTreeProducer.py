@@ -5,6 +5,7 @@ from .HeavyFlavDibosonSampleProducer import DibosonSampleProducer
 from .HeavyFlavInclusiveSampleProducer import InclusiveSampleProducer
 from .HeavyFlavHiggsSampleProducer import HiggsSampleProducer
 from .HeavyFlavMuTaggedSampleProducer import MuTaggedSampleProducer
+from .HeavyFlavSimpleMatchingProducer import SimpleMatchingProducer
 
 def heavyFlavSFTreeFromConfig():
     import yaml
@@ -26,5 +27,7 @@ def heavyFlavSFTreeFromConfig():
         return HiggsSampleProducer(**cfg)
     elif channel == 'mutagged':
         return MuTaggedSampleProducer(**cfg)
+    elif channel.startswith('simple-matching-'):
+        return SimpleMatchingProducer(**cfg)
     else:
         return RuntimeError('Unsupported channel %s' % channel)

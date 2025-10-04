@@ -25,7 +25,11 @@ cut_dict_ak8 = {
     'inclusive': 'Sum$((Jet_pt>25 && abs(Jet_eta)<2.4 && (Jet_jetId & 2)) * Jet_pt)>300 && Sum$(FatJet_subJetIdx1>=0 && FatJet_subJetIdx2>=0 && FatJet_msoftdrop>10)>0',
     'higgs': 'nFatJet>0',
     'mutagged': 'Sum$((Jet_pt>25 && abs(Jet_eta)<2.4 && (Jet_jetId & 2)) * Jet_pt)>200 && nFatJet>0',
+    'simple-matching': 'nFatJet>0',
 }
+for y in ['2016', '2016APV', '2017', '2018', '2022', '2022EE', '2023', '2023BPix', '2024']:
+    cut_dict_ak8['simple-matching-' + y] = copy.deepcopy(cut_dict_ak8['simple-matching'])
+
 cut_dict_ak15 = {
     'photon': 'Sum$(Photon_pt>200 && Photon_cutBased>=2 && Photon_electronVeto)>0 && nAK15Puppi>0',
     'qcd': 'Sum$((Jet_pt>25 && abs(Jet_eta)<2.4 && (Jet_jetId & 2)) * Jet_pt)>200 && nAK15Puppi>0',

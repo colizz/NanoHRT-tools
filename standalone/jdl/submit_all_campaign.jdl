@@ -1,0 +1,24 @@
+Universe   = vanilla
+Executable = run.sh
+
+# custom args
+EOSPATH = root://eoscms.cern.ch//store/cmst3/group/vhcc/sfTuples/trees_sf/20251001_NanoV15_fullCampaignVal_ntuples/$(output_file).root
+
+Arguments = $(input_file) $(EOSPATH)
+
+request_cpus = 1
+request_memory = 2000
+use_x509userproxy = true
+
++JobFlavour = "tomorrow"
+
+Log        = log/job.log_$(Cluster)
+Output     = log/job.out_$(Cluster)-$(Process)
+Error      = log/job.err_$(Cluster)-$(Process)
+
+should_transfer_files   = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+transfer_input_files    = nanoAOD_to_ntuple.C
+transfer_output_files   = dummy.cc
+
+Queue input_file, output_file from samples/input_list_all_campaign.txt

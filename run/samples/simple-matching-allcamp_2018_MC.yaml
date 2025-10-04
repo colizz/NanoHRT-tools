@@ -1,0 +1,58 @@
+# 25.10 NanoAOD v15 validation samples
+
+qcd600to800_2016:
+ - /QCD_Pt_600to800_TuneCP5_13TeV_pythia8/RunIISummer20UL16NanoAODv15-150X_mcRun2_asymptotic_v1-v1/NANOAODSIM
+qcd600to800_2016APV:
+ - /QCD_Pt_600to800_TuneCP5_13TeV_pythia8/RunIISummer20UL16NanoAODAPVv15-150X_mcRun2_asymptotic_preVFP_v1-v1/NANOAODSIM
+qcd600to800_2017:
+ - /QCD_Pt_600to800_TuneCP5_13TeV_pythia8/RunIISummer20UL17NanoAODv15-150X_mc2017_realistic_v1-v1/NANOAODSIM
+qcd600to800_2018:
+ - /QCD_Pt_600to800_TuneCP5_13TeV_pythia8/RunIISummer20UL18NanoAODv15-150X_mc2018_realistic_v1-v1/NANOAODSIM
+qcd600to800_2022:
+ - /QCD_PT-600to800_TuneCP5_13p6TeV_pythia8/Run3Summer22NanoAODv15-150X_mcRun3_2022_realistic_v1_ext1-v1/NANOAODSIM
+qcd600to800_2022EE:
+ - /QCD_PT-600to800_TuneCP5_13p6TeV_pythia8/Run3Summer22EENanoAODv15-150X_mcRun3_2022_realistic_postEE_v1-v1/NANOAODSIM
+qcd600to800_2023:
+ - /QCD_PT-600to800_TuneCP5_13p6TeV_pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM
+qcd600to800_2023BPix:
+ - /QCD_PT-600to800_TuneCP5_13p6TeV_pythia8/Run3Summer23BPixNanoAODv15-150X_mcRun3_2023_realistic_postBPix_v1-v1/NANOAODSIM
+qcd600to800_2024:
+ - /QCD_Bin-PT-600to800_TuneCP5_13p6TeV_pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+
+ttbarsl_2016:
+ - /TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv15-150X_mcRun2_asymptotic_v1-v1/NANOAODSIM
+ttbarsl_2016APV:
+ - /TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODAPVv15-150X_mcRun2_asymptotic_preVFP_v1-v1/NANOAODSIM
+ttbarsl_2017:
+ - /TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv15-150X_mc2017_realistic_v1-v1/NANOAODSIM
+ttbarsl_2018:
+ - /TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv15-150X_mc2018_realistic_v1-v1/NANOAODSIM
+ttbarsl_2022:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv15-150X_mcRun3_2022_realistic_v1-v1/NANOAODSIM
+ttbarsl_2022EE:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22EENanoAODv15-150X_mcRun3_2022_realistic_postEE_v1-v1/NANOAODSIM
+ttbarsl_2023:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM
+ttbarsl_2023BPix:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixNanoAODv15-150X_mcRun3_2023_realistic_postBPix_v1-v1/NANOAODSIM
+ttbarsl_2024:
+ - /TTtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+
+gghbb_2016:
+ - /GluGluHToBB_Pt-200ToInf_M-125_TuneCP5_MINLO_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv15-150X_mcRun2_asymptotic_v1-v1/NANOAODSIM
+gghbb_2016APV:
+ - /GluGluHToBB_Pt-200ToInf_M-125_TuneCP5_MINLO_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODAPVv15-150X_mcRun2_asymptotic_preVFP_v1-v1/NANOAODSIM
+gghbb_2017:
+ - /GluGluHToBB_Pt-200ToInf_M-125_TuneCP5_MINLO_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv15-150X_mc2017_realistic_v1-v1/NANOAODSIM
+gghbb_2018:
+ - /GluGluHToBB_Pt-200ToInf_M-125_TuneCP5_MINLO_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv15-150X_mc2018_realistic_v1-v1/NANOAODSIM
+gghbb_2022:
+ - /GluGluHto2B_PT-200_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer22NanoAODv15-150X_mcRun3_2022_realistic_v1_ext1-v1/NANOAODSIM
+gghbb_2022EE:
+ - /GluGluHto2B_PT-200_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer22EENanoAODv15-150X_mcRun3_2022_realistic_postEE_v1_ext1-v1/NANOAODSIM
+gghbb_2023:
+ - /GluGluHto2B_PT-200_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23NanoAODv15-150X_mcRun3_2023_realistic_v1-v1/NANOAODSIM
+gghbb_2023BPix:
+ - /GluGluHto2B_PT-200_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixNanoAODv15-150X_mcRun3_2023_realistic_postBPix_v1-v1/NANOAODSIM
+gghbb_2024:
+ - /GluGluH-Hto2B_Bin-PT-200_Par-M-125_TuneCP5_13p6TeV_powhegMINLO-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
