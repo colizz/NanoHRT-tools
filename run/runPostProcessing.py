@@ -13,6 +13,28 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format='[%(asctime)s] %(levelname)s: %(message)s')
 
 
+def check_grid_proxy(verbose=False, retry=3):
+    import subprocess
+    retry_count = 0
+    while True:
+        retry_count += 1
+        if retry_count > retry:
+            raise RuntimeError('Failed to set up valid grid proxy')
+        p = subprocess.Popen('voms-proxy-info -exists', shell=True)
+        p.communicate()
+        if p.returncode == 0:
+            if verbose:
+                logging.info('Grid proxy is valid:')
+                p = subprocess.Popen('voms-proxy-info', shell=True)
+                p.communicate()
+            break
+        else:
+            if verbose:
+                logging.info('No valid grid proxy, will run `voms-proxy-init -rfc -voms cms -valid 192:00`.')
+            p = subprocess.Popen('voms-proxy-init -rfc -voms cms -valid 192:00', shell=True)
+            p.communicate()
+
+
 def get_chunks(l, n):
     """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
@@ -499,6 +521,7 @@ queue jobid from {jobids_file}
     with open(condorfile, 'w') as f:
         f.write(condordesc)
 
+    check_grid_proxy()
     cmd = 'condor_submit {condorfile}'.format(condorfile=condorfile)
     print('Run the following command to submit the jobs:\n  %s' % cmd)
     if args.batch:
