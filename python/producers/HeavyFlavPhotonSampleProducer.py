@@ -64,7 +64,7 @@ class PhotonSampleProducer(HeavyFlavBaseProducer):
         self.fillBaseEventInfo(event)
         self.fillFatJetInfo(event, probe_jets)
 
-        if self.year == 2016:
+        if self.year in ["2016APV", "2016"]:
             self.out.fillBranch("passTrigPhoton", event.HLT_Photon175)
         else:
             self.out.fillBranch("passTrigPhoton", event.HLT_Photon200)

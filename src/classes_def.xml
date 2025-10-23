@@ -1,0 +1,9 @@
+<lcgdict>
+<selection>
+  <class name="PyJetResolutionWrapper"/>
+  <class name="PyJetResolutionScaleFactorWrapper"/>
+  <class name="PyJetParametersWrapper"/>
+  <class name="WeightCalculatorFromHistogram"/>
+  <class name="ReduceMantissaToNbitsRounding"/>
+</selection>
+</lcgdict>

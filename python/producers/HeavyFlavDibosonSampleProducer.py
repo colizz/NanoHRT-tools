@@ -92,13 +92,13 @@ class DibosonSampleProducer(HeavyFlavBaseProducer):
         self.fillFatJetInfo(event, probe_jets)
 
         # fill producer-specific branches
-        if self.year == 2016:
+        if self.year in (2016, "2016"):
             self.out.fillBranch("passTrigEl", passTrigger(event, 'HLT_Ele27_WPTight_Gsf'))
             self.out.fillBranch("passTrigMu", passTrigger(event, ['HLT_IsoMu24', 'HLT_IsoTkMu24']))
-        elif self.year == 2017:
+        elif self.year in (2017, "2017"):
             self.out.fillBranch("passTrigEl", passTrigger(event, 'HLT_Ele32_WPTight_Gsf_L1DoubleEG'))
             self.out.fillBranch("passTrigMu", passTrigger(event, 'HLT_IsoMu27'))
-        elif self.year == 2018:
+        elif self.year in (2018, "2018"):
             self.out.fillBranch("passTrigEl", passTrigger(event, 'HLT_Ele32_WPTight_Gsf'))
             self.out.fillBranch("passTrigMu", passTrigger(event, 'HLT_IsoMu24'))
 

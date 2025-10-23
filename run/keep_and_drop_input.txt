@@ -3,8 +3,6 @@ dropmatch n?PFCands_.+
 
 # AK4 jets
 dropmatch Jet_(b|c)Reg(Corr|res)
-drop Jet_*EF
-keep Jet_*EmEF
 
 # objects
 dropmatch n?boostedTau_.+
@@ -28,6 +26,7 @@ keep HLT_PFMET*_PFMHT*_IDTight*
 keep HLT_Photon175
 keep HLT_Photon200
 keep HLT_BTagMu_*Jet300_Mu5*
+keep HLT_AK8PFJet*_SoftDropMass*
 keepmatch HLT_PFHT[0-9]+
 
 # L1/TrigObj
@@ -42,7 +41,5 @@ dropmatch n?Generator_.+
 dropmatch n?LHEReweightingWeight
 dropmatch n?HTXS_.+
 dropmatch n?GenIsolatedPhoton_.+
-dropmatch n?PuppiMET_.+
 dropmatch n?CaloMET_.+
 dropmatch n?ChsMET_.+
-dropmatch n?RawPuppiMET_.+

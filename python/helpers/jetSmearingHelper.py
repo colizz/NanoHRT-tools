@@ -24,6 +24,7 @@ def find_and_extract_tarball(name, destination, copy_txt_with_prefix=None):
                 print('... extracted %s to %s' % (fullpath, destination))
                 return fullpath
 
+    raise RuntimeError('Could not find tarball %s in %s' % (name, search_pathes))
 
 def match(jet, genjets, resolution, dr2cut=0.04, dptcut=3):
     # Try to find a gen jet matching
@@ -74,7 +75,7 @@ class jetSmearer(object):
         self.rnd = ROOT.TRandom3(12345)
 
         # load libraries for accessing JER scale factors and uncertainties from txt files
-        for library in ["libCondFormatsJetMETObjects", "libPhysicsToolsNanoAODTools"]:
+        for library in ["libCondFormatsJetMETObjects", "libPhysicsToolsNanoHRTTools"]:
             if library not in ROOT.gSystem.GetLibraries():
                 print("Load Library '%s'" % library.replace("lib", ""))
                 ROOT.gSystem.Load(library)

@@ -144,11 +144,11 @@ class MuTaggedSampleProducer(HeavyFlavBaseProducer):
         """process event, return True (go to next module) or False (fail, go to next event)"""
 
         # trigger selection
-        if self.year == 2018:
+        if self.year == "2018":
             passBTagMuTrig = passTrigger(event, ['HLT_BTagMu_AK8Jet300_Mu5', 'HLT_BTagMu_AK8Jet300_Mu5_noalgo', 'HLT_BTagMu_AK4Jet300_Mu5', 'HLT_BTagMu_AK4Jet300_Mu5_noalgo'])
-        elif self.year == 2017:
+        elif self.year == "2017":
             passBTagMuTrig = passTrigger(event, ['HLT_BTagMu_AK8Jet300_Mu5', 'HLT_BTagMu_AK4Jet300_Mu5'])
-        elif self.year <= 2016:
+        elif self.year in ["2016APV", "2016"]:
             passBTagMuTrig = passTrigger(event, ['HLT_BTagMu_AK8Jet300_Mu5', 'HLT_BTagMu_AK4Jet300_Mu5', 'HLT_BTagMu_Jet300_Mu5'])
 
         # accept events only passing the trigger

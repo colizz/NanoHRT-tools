@@ -35,21 +35,27 @@ def _sf(vals, syst='nominal'):
 class JetCorrector(object):
 
     def __init__(self, globalTag, jetType, jecPath, applyResidual=True):
-        self.jecLevels = ['L2Relative', 'L3Absolute'] if 'Puppi' in jetType else [
-            'L1FastJet', 'L2Relative', 'L3Absolute']
+        if 'Puppi' in jetType and (globalTag.startswith('Summer19') or globalTag.startswith('Summer20')):
+            self.jecLevels = ['L2Relative', 'L3Absolute']
+        else:
+            # L1FastJet has been added as a placeholder for PUPPI jets in newer JECs
+            self.jecLevels = ['L1FastJet', 'L2Relative', 'L3Absolute']
         if applyResidual:
             self.jecLevels += ['L2L3Residual']
         self.vPar = ROOT.vector(ROOT.JetCorrectorParameters)()
         logger.info('Init JetCorrector: %s, %s, %s', globalTag, jetType, str(self.jecLevels))
         for level in self.jecLevels:
-            self.vPar.push_back(ROOT.JetCorrectorParameters(os.path.join(
-                jecPath, "%s_%s_%s.txt" % (globalTag, level, jetType)), ""))
+            path = os.path.join(jecPath, "%s_%s_%s.txt" % (globalTag, level, jetType))
+            logging.debug(f"JetCorrector.__init__: Level {level}, Path {path}")
+            self.vPar.push_back(ROOT.JetCorrectorParameters(path, ""))
+
         self.corrector = ROOT.FactorizedJetCorrector(self.vPar)
 
     def getCorrection(self, jet, rho, level=None):
         try:
             raw_pt = jet.rawP4.pt()
-        except RuntimeError:
+        except RuntimeError as e:
+            logger.error(f"Error: {e}")
             raw_pt = jet.pt * (1. - jet.rawFactor)
         self.corrector.setJetPt(raw_pt)
         self.corrector.setJetPhi(jet.phi)
@@ -57,7 +63,8 @@ class JetCorrector(object):
         self.corrector.setRho(rho)
         try:
             self.corrector.setJetA(jet.area)
-        except RuntimeError:
+        except RuntimeError as e:
+            logger.error(f"Error: {e}; returning None")
             pass
         if level is None:
             return self.corrector.getCorrection()
@@ -92,7 +99,7 @@ class JetMETCorrector(object):
             - 'up', 'down': up/down variation of the unclustered energy
         '''
 
-        self.year = year
+        self.year = str(year)
         self.jetType = jetType
         self.jec = jec
         self.jes = jes
@@ -109,8 +116,7 @@ class JetMETCorrector(object):
         self.excludeJetsForMET = None
 
         # set up tags for each year
-        if self.year == 2015:
-            # hack, actually UL2016 preVFP (APV)
+        if self.year == "2016APV":
             self.globalTag = 'Summer19UL16APV_V7_MC'
             self.jerTag = 'Summer20UL16APV_JRV3_MC'
             self.dataTags = (
@@ -120,8 +126,7 @@ class JetMETCorrector(object):
                 (272007, 'Summer19UL16APV_RunBCD_V7_DATA'),
                 (276831, 'Summer19UL16APV_RunEF_V7_DATA'),
             )
-        elif self.year == 2016:
-            # hack, actually UL2016 postVFP
+        elif self.year == "2016":
             self.globalTag = 'Summer19UL16_V7_MC'
             self.jerTag = 'Summer20UL16_JRV3_MC'
             self.dataTags = (
@@ -130,7 +135,7 @@ class JetMETCorrector(object):
                 # (start run number (inclusive), 'tag name')
                 (277772, 'Summer19UL16_RunFGH_V7_DATA'),
             )
-        elif self.year == 2017:
+        elif self.year == "2017":
             self.globalTag = 'Summer19UL17_V6_MC'
             self.jerTag = 'Summer19UL17_JRV2_MC'
             self.dataTags = (
@@ -143,7 +148,7 @@ class JetMETCorrector(object):
                 (303435, 'Summer19UL17_RunE_V6_DATA'),
                 (304911, 'Summer19UL17_RunF_V6_DATA'),
             )
-        elif self.year == 2018:
+        elif self.year == "2018":
             self.globalTag = 'Summer19UL18_V5_MC'
             self.jerTag = 'Summer19UL18_JRV2_MC'
             self.dataTags = (
@@ -155,13 +160,105 @@ class JetMETCorrector(object):
                 (319313, 'Summer19UL18_RunC_V5_DATA'),
                 (320394, 'Summer19UL18_RunD_V5_DATA'),
             )
+        elif self.year == "2022":
+            ############################################### Run 3 Refs ###############################################
+            # - JES: https://cms-jerc.web.cern.ch/Recommendations/#jet-energy-scale
+            # - JER: https://cms-jerc.web.cern.ch/Recommendations/#jet-energy-resolution
+            # - Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis
+            ############################################### Run 3 Refs ###############################################
+
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_V2_MC.tar.gz
+            self.globalTag = 'Summer22_22Sep2023_V2_MC'
+            # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer22_22Sep2023_JRV1_MC.tar.gz
+            self.jerTag = 'Summer22_22Sep2023_JRV1_MC'
+            # JES data
+            # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2022_Era_definition
+            self.dataTags = (
+                # set the name of the tarball with a dummy run number
+                (0, 'Summer22_22Sep2023_RunCD_V2_DATA'),
+                # (start run number (inclusive), 'tag name')
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_RunCD_V2_DATA.tar.gz
+                (355794, 'Summer22_22Sep2023_RunCD_V2_DATA'),
+            )
+        elif self.year == "2022EE":
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_V2_MC.tar.gz
+            self.globalTag = 'Summer22EE_22Sep2023_V2_MC'
+            # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer22EE_22Sep2023_JRV1_MC.tar.gz
+            self.jerTag = 'Summer22EE_22Sep2023_JRV1_MC'
+            # JES data
+            # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2022_Era_definition
+            self.dataTags = (
+                # set the name of the tarball with a dummy run number
+                (0, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
+                # (start run number (inclusive), 'tag name')
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunE_V2_DATA.tar.gz
+                (359022, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunF_V2_DATA.tar.gz
+                (360332, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunG_V2_DATA.tar.gz
+                (362350, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
+            )
+        elif self.year == "2023":
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_V1_MC.tar.gz
+            self.globalTag = 'Summer23Prompt23_V1_MC'
+            # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer23Prompt23_RunCv1234_JRV1_MC.tar.gz
+            self.jerTag = 'Summer23Prompt23_RunCv1234_JRV1_MC'
+            # JES data
+            # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2023_Era_definition
+            self.dataTags = (
+                # set the name of the tarball with a dummy run number
+                (0, 'Summer23Prompt23_RunCv123_V1_DATA'),
+                # (start run number (inclusive), 'tag name')
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv123_V1_DATA.tar.gz
+                (367080, 'Summer23Prompt23_RunCv123_V1_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv4_V1_DATA.tar.gz
+                (367765, 'Summer23Prompt23_RunCv4_V1_DATA'),
+            )
+        elif self.year == "2023BPix":
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_V1_MC.tar.gz
+            self.globalTag = 'Summer23BPixPrompt23_V1_MC'
+            # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer23BPixPrompt23_RunD_JRV1_MC.tar.gz
+            self.jerTag = 'Summer23BPixPrompt23_RunD_JRV1_MC'
+            # JES data
+            # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2023_Era_definition
+            self.dataTags = (
+                # set the name of the tarball with a dummy run number
+                (0, 'Summer23BPixPrompt23_RunD_V1_DATA'),
+                # (start run number (inclusive), 'tag name')
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_RunD_V1_DATA.tar.gz
+                (369803, 'Summer23BPixPrompt23_RunD_V1_DATA'),
+            )
+        elif self.year == "2024":
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_V1_MC.tar.gz
+            self.globalTag = 'Summer24Prompt24_V1_MC'
+            self.jerTag = 'Summer23BPixPrompt23_RunD_JRV1_MC' # FIXME: temporarily use the 2023 JER tag
+            # JES data
+            # Run number ranges (PdmV ranges and JEC ranges for multiple nibs):
+            #  - https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2024_Era_definition
+            #  - https://github.com/cms-jet/JECDatabase/tree/master/textFiles/Summer24Prompt24_RunCnib1_V1_DATA
+            self.dataTags = (
+                # set the name of the tarball with a dummy run number
+                (0, 'Summer24Prompt24_RunCnib1_V1_DATA'),
+                # (start run number (inclusive), 'tag name')
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_RunCnib1_V1_DATA.tar.gz
+                (379412, 'Summer24Prompt24_RunCnib1_V1_DATA'),
+                (380253, 'Summer24Prompt24_RunDnib1_V1_DATA'),
+                (380948, 'Summer24Prompt24_RunEnib1_V1_DATA'),
+                (381944, 'Summer24Prompt24_RunFnib1_V1_DATA'),
+                (382298, 'Summer24Prompt24_RunFnib2_V1_DATA'),
+                (383247, 'Summer24Prompt24_RunFnib3_V1_DATA'),
+                (383780, 'Summer24Prompt24_RunGnib1_V1_DATA'),
+                (384933, 'Summer24Prompt24_RunGnib2_V1_DATA'),
+                (385814, 'Summer24Prompt24_RunHnib1_V1_DATA'),
+                (386409, 'Summer24Prompt24_RunInib1_V1_DATA'),
+            )
         else:
             raise RuntimeError('Invalid year: %s' % (str(self.year)))
 
     def beginJob(self):
         # set up JEC
         if self.jec or self.jes in ['up', 'down'] or self.correctMET or self.jesr_extra_br:
-            for library in ["libCondFormatsJetMETObjects", "libPhysicsToolsNanoAODTools"]:
+            for library in ["libCondFormatsJetMETObjects", "libPhysicsToolsNanoHRTTools"]:
                 if library not in ROOT.gSystem.GetLibraries():
                     logger.info("Load Library '%s'" % library.replace("lib", ""))
                     ROOT.gSystem.Load(library)
@@ -206,7 +303,7 @@ class JetMETCorrector(object):
             self.jetSmearer.beginJob()
 
     def endJob(self):
-        shutil.rmtree(self.jerInputFilePath)
+        shutil.rmtree(self.jesInputFilePath)
 
     def setSeed(self, seed):
         if self.jetSmearer is not None:
@@ -232,7 +329,12 @@ class JetMETCorrector(object):
         if jet.neEmEF + jet.chEmEF > 0.9:
             return zero
         rawP4 = jet.rawP4 * (jet._smearFactorNominal if self.jer and self.smearMET else 1 - jet.muonSubtrFactor)
-        corrP4 = rawP4 * jet._jecFactor
+        try:
+            corrP4 = rawP4 * jet._jecFactor
+        except TypeError as e:
+            logger.error(f"{rawP4=}")
+            logger.error(f"{jet._jecFactor=}")
+            raise e
         if corrP4.pt() < 15:
             return zero
         delta = rawP4 * jet._jecFactorL1 - corrP4
@@ -351,3 +453,53 @@ class JetMETCorrector(object):
                 jmrsf = _sf(self.jetSmearer.getSmearValsM(j, gensubjets), self.jmr)
                 j.mass *= jmrsf
                 j.msoftdrop = j.mass
+
+
+class JetVetoHelper(object):
+
+    def __init__(self, year):
+        self.year = str(year)
+        self.jvmPath = None
+        self.jetVetoMapFile = None
+        self.jetVetoMapHist = None
+        
+        # Map year to jet veto map path
+        year_to_jvm = {
+            "2016APV": "Summer19UL16_V0/hotjets-UL16.root:h2hot_ul16",
+            "2016": "Summer19UL16_V0/hotjets-UL16.root:h2hot_ul16",
+            "2017": "Summer19UL17_V2/hotjets-UL17_v2.root:h2hot_ul17",
+            "2018": "Summer19UL18_V1/hotjets-UL18.root:h2hot_ul18",
+            "2022": "Summer22_23Sep2023/Summer22_23Sep2023_RunCD_v1.root:jetvetomap",
+            "2022EE": "Summer22EE_23Sep2023/Summer22EE_23Sep2023_RunEFG_v1.root:jetvetomap",
+            "2023": "Summer23Prompt23/Summer23Prompt23_RunC_v1.root:jetvetomap",
+            "2023BPix": "Summer23BPixPrompt23/Summer23BPixPrompt23_RunD_v1.root:jetvetomap",
+            "2024": "Summer24Prompt24_V1/Summer24Prompt24_RunBCDEFGHI.root:jetvetomap",
+        }
+        
+        if self.year not in year_to_jvm:
+            raise ValueError(f"Invalid year for jet veto map: {self.year}")
+        
+        self.jvmPath, self.histName = year_to_jvm[self.year].split(":")
+        logger.info('Init JetVetoHelper for year %s with path %s', self.year, self.jvmPath)
+
+    def beginJob(self):
+        full_path = os.path.join(os.environ.get('CMSSW_BASE'), 'src/PhysicsTools/NanoHRTTools/data/jet_veto_maps', self.jvmPath)
+        if not os.path.exists(full_path):
+            raise FileNotFoundError(f'Jet veto map file not found: {full_path}')
+        
+        self.jetVetoMapFile = ROOT.TFile.Open(full_path, "READ")
+        self.jetVetoMapHist = self.jetVetoMapFile.Get(self.histName)
+        if self.jetVetoMapHist is None:
+            raise RuntimeError(f'Jet veto map histogram not found: {self.histName}')
+
+        self.jetVetoMapHist.SetDirectory(0)
+
+    def endJob(self):
+        self.jetVetoMapFile.Close()
+        self.jetVetoMapFile = None
+
+    def evaluate(self, eta, phi):
+        if self.jetVetoMapHist is None:
+            raise RuntimeError('Jet veto map histogram not loaded. Call beginJob() first.')
+        bin = self.jetVetoMapHist.FindBin(eta, phi)
+        return self.jetVetoMapHist.GetBinContent(bin)

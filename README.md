@@ -1,34 +1,119 @@
 # NanoHRT-tools
 
-### Set up CMSSW and offcial NanoAOD-tools
+## Set up CMSSW (on EL9 machines)
 
 ```bash
-cmsrel CMSSW_11_1_0_pre5_PY3
-cd CMSSW_11_1_0_pre5_PY3/src
+cmsrel CMSSW_15_0_10
+cd CMSSW_15_0_10/src
 cmsenv
-
-git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools
 ```
+> Note: no need to set up official NanoAOD-tools as it has been integrated into CMSSW.
 
-### Get customized NanoAOD tools for HeavyResTagging (NanoHRT-tools)
+## Get customized NanoAOD tools for HeavyResTagging (NanoHRT-tools)
 
 ```bash
-git clone https://github.com/colizz/NanoHRT-tools.git PhysicsTools/NanoHRTTools -b dev-UL-0201
+git clone https://github.com/colizz/NanoHRT-tools.git PhysicsTools/NanoHRTTools -b dev/nanov15
 ```
 
-### Compile
+## Compile
 
 ```bash
 scram b -j8
 ```
 
-### Test
+## Update Note
 
-Instructions to run the nanoAOD postprocessor can be found at [nanoAOD-tools](https://github.com/cms-nanoAOD/nanoAOD-tools#nanoaod-tools). 
+**October 2025:**
+This update adapts the framework based on the Run 2 UL setup [1] and two subsequent improvements for early Run 3 (2022/2023, for processing NanoAOD v12) [2,3], and makes it compatible with all currently used NanoAOD versions (NanoAOD v9, v12, v15). When running on NanoAOD v9/v12 samples, the framework gives consistent results to [2,3]
 
-### Production
+[1] https://github.com/colizz/NanoHRT-tools/tree/dev-UL-0201
+[2] https://github.com/lpaizano/NanoHRT-tools/tree/dev/run3
+[3] https://github.com/zichunhao/NanoHRT-tools/tree/wz-calibration
 
+Changes:
+
+- Moved files in `src/interface/python/data` from original NanoAOD-tools to NanoHRT-tools if they are not migrated to CMSSW's NanoAOD-tools.
+- Specialized support for different NanoAOD versions, including: fatjet taggers, jet b-tag WPs, usage of MET branches, jet corrections.
+- Alignment with the latest data campaigns: luminosity values, golden JSON, PU reweighting files (FIXME), lepton ID/isolation, JEC/JER.
+- Refactoring of the `qcd` channel
+- Updates to JetID logic: in nanoAOD v12, `Jet_jetId` is preserved but [re-computation is recommended](https://twiki.cern.ch/twiki/bin/view/CMS/JetID13p6TeV#nanoAOD_Flags).
+- Added `jet_veto_maps` following the logic in [2], updated to use the [latest minimal jet selection criteria](https://cms-jerc.web.cern.ch/Recommendations/#run-3).
+
+<details>
+
+<summary>Cross validation with early NanoHRT-tools branches</summary>
+
+**1. Validation with Run 2 UL setup for the `qcd` channel (deriving sfBDT SFs) [1]**
+
+Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
+```python
+default_config.update({
+    'nano_version': 'V9',
+    'fill_sv': True,
+})
+```
+
+Then run the production
 ```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov9 --jet-type ak8 --channel qcd --sample-dir samples_nanov9 --year 2018 -n 1
+```
+
+**2. Validation with Run 2 UL setup for the `muon` channel (deriving top/W SFs) [1,1a]**
+
+[1] https://github.com/colizz/NanoHRT-tools/tree/dev-UL-0201
+[1a] https://github.com/hqucms/NanoHRT-tools/tree/dev/UL
+
+Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
+```python
+default_config.update({
+    'nano_version': 'V9',
+})
+```
+
+Then run the production
+```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov9 --jet-type ak8 --channel muon --sample-dir samples_nanov9 --year 2018 -n 1
+```
+
+**3. Validation with early Run 3 setup for the `muon` channel (deriving top/W SFs) [2]**
+
+Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
+```python
+default_config.update({
+    'nano_version': 'V12',
+    'use_existing_jet_ids': True, # a jetId bug has been identified. Latest recommendation is to re-compute jetId via jet branches (set it to False) but here we use the existing jetId for cross validation
+    'jec': True, # should re-compute JECs for NanoAOD v12
+})
+```
+
+Then run the production
+```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov12 --jet-type ak8 --channel muon --sample-dir samples_nanov12 --year 2022EE -n 1
+```
+
+**4. Validation with early Run 3 setup for the `qcd` channel (deriving sfBDT SFs) [3]**
+
+Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
+```python
+default_config.update({
+    'nano_version': 'V12',
+    'fill_sv': True,
+    'custom_tagger_list': ["globalParT_QCD0HF", "globalParT_QCD1HF", "globalParT_QCD2HF", "globalParT_Xbb", "globalParT_Xcc", "globalParT_XbbVsQCD", "globalParT_massRes", "globalParT_massVis"], # presented in DAZSLE custom NanoAOD v12 samples
+    'use_existing_jet_ids': True, # a jetId bug has been identified. Latest recommendation is to re-compute jetId via jet branches (set it to False) but here we use the existing jetId for cross validation
+    'jec': True, # should re-compute JECs for NanoAOD v12
+})
+```
+
+Then run the production
+```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov12 --jet-type ak8 --channel qcd --sample-dir samples_nanov12 --year 2022EE -n 1
+```
+
+</details>
+
+## Production
+
+<!-- ```bash
 cd PhysicsTools/NanoHRTTools/run
 ```
 
@@ -51,8 +136,46 @@ python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/20230926_ULNanoV9 
 where, `/eos/<some-eos-path-on-lxplus>/` is some path on EOS you have write access to.
 
 Follow the instruction on screen to submit condor jobs. After all condor jobs finish, run the same command appended with ` --post`, to merge the trees.
+-->
 
-<!-- 
+<details>
+
+<summary>Production recipes for bookkeeping (keep updating)</summary>
+
+For `qcd` channel:
+
+A. For generating gen hadron N-subjettiness variables for sfBDT training.
+Updating the `default_config` dictionary:
+```python
+default_config.update({
+    'nano_version': 'V15',
+    'fill_sv': True,
+    'require_sv_cut': False, 'run_gen_hadron_nsubs': True, # for qcd channel -> dedicated for generating gen hadron N-subjettiness variables for sfBDT training
+    'jec': True,
+})
+```
+Running the production (after properly configuring the samples to run in e.g. [`run/samples_nanov15/qcd_2024_MC.yaml`](run/samples_nanov15/qcd_2024_MC.yaml)):
+```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/20251024_ULNanoV15_gen_hadron_nsubs --jet-type ak8 --channel qcd --sample-dir samples_nanov15 --year 2024 -n 1
+```
+
+B. For nominal `qcd` channel production.
+
+Updating the `default_config` dictionary:
+```python
+default_config.update({
+    'nano_version': 'V15',
+    'fill_sv': True,
+    'jec': True,
+})
+```
+Running the production (after properly configuring the samples to run in e.g. [`run/samples_nanov15/qcd_2024_MC.yaml`](run/samples_nanov15/qcd_2024_MC.yaml)):
+```bash
+python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/20251024_ULNanoV15 --jet-type ak8 --channel qcd --sample-dir samples_nanov15 --year 2024 -n 1
+```
+
+</details>
+
 ```bash
 python runPostProcessing.py [-i /path/of/input] -o /path/to/output -d datasets.yaml --friend 
 -I PhysicsTools.NanoHRTTools.producers.hrtMCTreeProducer hrtMCTree -n 1
@@ -65,23 +188,20 @@ To merge the trees, run the same command but add `--post -w ''` (i.e., set `-w` 
 
 ```bash
 python runHeavyFlavTrees.py -i /eos/uscms/store/user/lpcjme/noreplica/NanoHRT/path/to/input -o /path/to/output 
-(--sample-dir custom_samples) --jet-type [ak8,ak15] --channel [photon|qcd|muon|inclusive] --year [2016|2017|2018] -n 10 
+(--sample-dir custom_samples) --jet-type [ak8,ak15] --channel [photon|qcd|muon|inclusive|higgs|mutagged|simple-matching] --year [2016APV|2016|2017|2018] -n 10 
 (--batch) (--run-data) (--run-syst)
-(--run-tagger) (--run-mass-regression) (--sfbdt 0.5)
 (--condor-extras '+AccountingGroup = "group_u_CMST3.all"')
 ```
 
 Command line options:
 
-  - the preselection for each channel is coded in `runHRTTrees.py`
+  - the preselection and basic configurations for each channel is coded in `runHRTTrees.py`. Remember to set them to correct values before submitting jobs (the values will go to `metadata.json` after a job is created).
   - add `--run-data` to make data trees
   - add `--run-syst` to make the systematic trees
-  - can run data & MC for multiple years together w/ e.g., `--year 2016,2017,2018`. The `--run-data` option will be ignored in this case. Add also `--run-syst` to make the systematic trees.
-  - use `--sample-dir` to specify the directory containing the sample lists. Currently we maintain two sets of sample lists: the default one is under [samples](run/samples) which is used for running over official NanoAOD datasets remotely, and the other one is [custom_samples](run/custom_samples) which is used for running over privately produced NanoAOD datasets locally. To run over the private produced samples, ones needs to add `--sample-dir custom_samples` to the command line.
+  - can run data & MC for multiple years together w/ e.g., `--year 2016APV,2016,2017,2018`. The `--run-data` option will be ignored in this case. Add also `--run-syst` to make the systematic trees.
+  - use `--sample-dir` to specify the directory containing the sample lists. Currently we maintain two sets of sample lists: the default one is under samples_* (e.g. `--sample-dir [samples_nanov9](run/samples_nanov9)`) which is used for running over official NanoAOD datasets remotely, and the other one is [custom_samples](run/custom_samples) which is used for running over privately produced NanoAOD datasets locally. To run over the private produced samples, ones needs to add `--sample-dir custom_samples` to the command line.
   - the `--batch` option will submit jobs to condor automatically without confirmation
   - remove `-i` to run over remote files (e.g., official NanoAOD, or private NanoAOD published on DAS); consider adding `--prefetch` to copy files first before running
-  - **[NEW]** add `--run-tagger` (`--run-mass-regression`) to run new ParticleNet tagger (mass regression) on-the-fly. Check `HeavyFlavBaseProducer.py` for the model configuration.
-  - **[NEW]** use `--sfbdt` to change the sfBDT cut value. This affects only QCD and photon samples. By default, sfBDT > 0.5 is applied to QCD and photon samples.
   - **[NEW]** use `--condor-extras` to pass extra options to condor job description file.
      
 More options of `runPostProcessing.py` or `runHRTTrees.py` (a wrapper of `runPostProcessing.py`) can be found with `python runPostProcessing.py -h` or `python runHRTTrees.py -h`, e.g.,
