@@ -27,7 +27,9 @@ scram b -j8
 This update adapts the framework based on the Run 2 UL setup [1] and two subsequent improvements for early Run 3 (2022/2023, for processing NanoAOD v12) [2,3], and makes it compatible with all currently used NanoAOD versions (NanoAOD v9, v12, v15). When running on NanoAOD v9/v12 samples, the framework gives consistent results to [2,3]
 
 [1] https://github.com/colizz/NanoHRT-tools/tree/dev-UL-0201
+
 [2] https://github.com/lpaizano/NanoHRT-tools/tree/dev/run3
+
 [3] https://github.com/zichunhao/NanoHRT-tools/tree/wz-calibration
 
 Changes:
@@ -41,9 +43,11 @@ Changes:
 
 <details>
 
-<summary>Cross validation with early NanoHRT-tools branches</summary>
+<summary>**Cross validation with early NanoHRT-tools branches**</summary>
 
 **1. Validation with Run 2 UL setup for the `qcd` channel (deriving sfBDT SFs) [1]**
+
+[1] https://github.com/colizz/NanoHRT-tools/tree/dev-UL-0201
 
 Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
 ```python
@@ -61,6 +65,7 @@ python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov9 --jet-t
 **2. Validation with Run 2 UL setup for the `muon` channel (deriving top/W SFs) [1,1a]**
 
 [1] https://github.com/colizz/NanoHRT-tools/tree/dev-UL-0201
+
 [1a] https://github.com/hqucms/NanoHRT-tools/tree/dev/UL
 
 Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
@@ -77,6 +82,8 @@ python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov9 --jet-t
 
 **3. Validation with early Run 3 setup for the `muon` channel (deriving top/W SFs) [2]**
 
+[2] https://github.com/lpaizano/NanoHRT-tools/tree/dev/run3
+
 Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
 ```python
 default_config.update({
@@ -92,6 +99,8 @@ python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov12 --jet-
 ```
 
 **4. Validation with early Run 3 setup for the `qcd` channel (deriving sfBDT SFs) [3]**
+
+[3] https://github.com/zichunhao/NanoHRT-tools/tree/wz-calibration
 
 Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
 ```python
@@ -140,11 +149,12 @@ Follow the instruction on screen to submit condor jobs. After all condor jobs fi
 
 <details>
 
-<summary>Production recipes for bookkeeping (keep updating)</summary>
+<summary>**Production recipes for bookkeeping (keep updating)**</summary>
 
-For `qcd` channel:
+**For `qcd` channel:**
 
-A. For generating gen hadron N-subjettiness variables for sfBDT training.
+**A. For generating gen hadron N-subjettiness variables for sfBDT training.**
+
 Updating the `default_config` dictionary:
 ```python
 default_config.update({
@@ -159,7 +169,7 @@ Running the production (after properly configuring the samples to run in e.g. [`
 python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/20251024_ULNanoV15_gen_hadron_nsubs --jet-type ak8 --channel qcd --sample-dir samples_nanov15 --year 2024 -n 1
 ```
 
-B. For nominal `qcd` channel production.
+**B. For nominal `qcd` channel production.**
 
 Updating the `default_config` dictionary:
 ```python
@@ -255,4 +265,4 @@ Top quark is treated a bit differently:
 - [ ] JEC/JER
 - [ ] MET filters
 - [ ] MET recipes (if any)
-- [ ] samples (check also those in PRODUCTION status) -->
+- [ ] samples (check also those in PRODUCTION status)
