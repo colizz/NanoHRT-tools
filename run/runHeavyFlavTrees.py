@@ -71,8 +71,9 @@ golden_json = {
     "2022": 'Cert_Collisions2022_355100_362760_Golden.json',
     "2022EE": 'Cert_Collisions2022_355100_362760_Golden.json',
     "2023": 'Cert_Collisions2023_366442_370790_Golden.json', 
-    "2023BPix": 'Cert_Collisions2023_366442_370790_Golden.json', 
-}
+    "2023BPix": 'Cert_Collisions2023_366442_370790_Golden.json',
+    "2024": 'Cert_Collisions2024_378981_386951_Golden.json', 
+}  
 
 def _process(args):
     default_config['jetType'] = args.jet_type
