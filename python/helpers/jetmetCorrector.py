@@ -167,66 +167,66 @@ class JetMETCorrector(object):
             # - Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis
             ############################################### Run 3 Refs ###############################################
 
-            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_V2_MC.tar.gz
-            self.globalTag = 'Summer22_22Sep2023_V2_MC'
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_V4_MC.tar.gz
+            self.globalTag = 'Summer22_22Sep2023_V4_MC'
             # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer22_22Sep2023_JRV1_MC.tar.gz
             self.jerTag = 'Summer22_22Sep2023_JRV1_MC'
             # JES data
             # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2022_Era_definition
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer22_22Sep2023_RunCD_V2_DATA'),
+                (0, 'Summer22_22Sep2023_RunCD_V4_DATA'),
                 # (start run number (inclusive), 'tag name')
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_RunCD_V2_DATA.tar.gz
-                (355794, 'Summer22_22Sep2023_RunCD_V2_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22_22Sep2023_RunCD_V4_DATA.tar.gz
+                (355794, 'Summer22_22Sep2023_RunCD_V4_DATA'),
             )
         elif self.year == "2022EE":
-            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_V2_MC.tar.gz
-            self.globalTag = 'Summer22EE_22Sep2023_V2_MC'
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_V4_MC.tar.gz
+            self.globalTag = 'Summer22EE_22Sep2023_V4_MC'
             # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer22EE_22Sep2023_JRV1_MC.tar.gz
             self.jerTag = 'Summer22EE_22Sep2023_JRV1_MC'
             # JES data
             # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2022_Era_definition
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
+                (0, 'Summer22EE_22Sep2023_RunE_V4_DATA'),
                 # (start run number (inclusive), 'tag name')
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunE_V2_DATA.tar.gz
-                (359022, 'Summer22EE_22Sep2023_RunE_V2_DATA'),
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunF_V2_DATA.tar.gz
-                (360332, 'Summer22EE_22Sep2023_RunF_V2_DATA'),
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunG_V2_DATA.tar.gz
-                (362350, 'Summer22EE_22Sep2023_RunG_V2_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunE_V4_DATA.tar.gz
+                (359022, 'Summer22EE_22Sep2023_RunE_V4_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunF_V4_DATA.tar.gz
+                (360332, 'Summer22EE_22Sep2023_RunF_V4_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer22EE_22Sep2023_RunG_V4_DATA.tar.gz
+                (362350, 'Summer22EE_22Sep2023_RunG_V4_DATA'),
             )
         elif self.year == "2023":
-            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_V1_MC.tar.gz
-            self.globalTag = 'Summer23Prompt23_V1_MC'
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_V4_MC.tar.gz
+            self.globalTag = 'Summer23Prompt23_V4_MC'
             # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer23Prompt23_RunCv1234_JRV1_MC.tar.gz
             self.jerTag = 'Summer23Prompt23_RunCv1234_JRV1_MC'
             # JES data
             # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2023_Era_definition
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer23Prompt23_RunCv123_V1_DATA'),
+                (0, 'Summer23Prompt23_RunCv123_V4_DATA'),
                 # (start run number (inclusive), 'tag name')
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv123_V1_DATA.tar.gz
-                (367080, 'Summer23Prompt23_RunCv123_V1_DATA'),
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv4_V1_DATA.tar.gz
-                (367765, 'Summer23Prompt23_RunCv4_V1_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv123_V4_DATA.tar.gz
+                (367080, 'Summer23Prompt23_RunCv123_V4_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23Prompt23_RunCv4_V4_DATA.tar.gz
+                (367765, 'Summer23Prompt23_RunCv4_V4_DATA'),
             )
         elif self.year == "2023BPix":
-            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_V1_MC.tar.gz
-            self.globalTag = 'Summer23BPixPrompt23_V1_MC'
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_V4_MC.tar.gz
+            self.globalTag = 'Summer23BPixPrompt23_V4_MC'
             # JER MC: https://github.com/cms-jet/JRDatabase/blob/master/tarballs/Summer23BPixPrompt23_RunD_JRV1_MC.tar.gz
             self.jerTag = 'Summer23BPixPrompt23_RunD_JRV1_MC'
             # JES data
             # Run number ranges: https://twiki.cern.ch/twiki/bin/viewauth/CMS/PdmVRun3Analysis#2023_Era_definition
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer23BPixPrompt23_RunD_V1_DATA'),
+                (0, 'Summer23BPixPrompt23_RunD_V4_DATA'),
                 # (start run number (inclusive), 'tag name')
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_RunD_V1_DATA.tar.gz
-                (369803, 'Summer23BPixPrompt23_RunD_V1_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer23BPixPrompt23_RunD_V4_DATA.tar.gz
+                (369803, 'Summer23BPixPrompt23_RunD_V4_DATA'),
             )
         elif self.year == "2024":
             # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_V2_MC.tar.gz
