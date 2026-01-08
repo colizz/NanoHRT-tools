@@ -229,8 +229,8 @@ class JetMETCorrector(object):
                 (369803, 'Summer23BPixPrompt23_RunD_V1_DATA'),
             )
         elif self.year == "2024":
-            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_V1_MC.tar.gz
-            self.globalTag = 'Summer24Prompt24_V1_MC'
+            # JES MC: https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_V2_MC.tar.gz
+            self.globalTag = 'Summer24Prompt24_V2_MC'
             self.jerTag = 'Summer23BPixPrompt23_RunD_JRV1_MC' # FIXME: temporarily use the 2023 JER tag
             # JES data
             # Run number ranges (PdmV ranges and JEC ranges for multiple nibs):
@@ -238,19 +238,19 @@ class JetMETCorrector(object):
             #  - https://github.com/cms-jet/JECDatabase/tree/master/textFiles/Summer24Prompt24_RunCnib1_V1_DATA
             self.dataTags = (
                 # set the name of the tarball with a dummy run number
-                (0, 'Summer24Prompt24_RunCnib1_V1_DATA'),
+                (0, 'Summer24Prompt24_RunCnib1_V2_DATA'),
                 # (start run number (inclusive), 'tag name')
-                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_RunCnib1_V1_DATA.tar.gz
-                (379412, 'Summer24Prompt24_RunCnib1_V1_DATA'),
-                (380253, 'Summer24Prompt24_RunDnib1_V1_DATA'),
-                (380948, 'Summer24Prompt24_RunEnib1_V1_DATA'),
-                (381944, 'Summer24Prompt24_RunFnib1_V1_DATA'),
-                (382298, 'Summer24Prompt24_RunFnib2_V1_DATA'),
-                (383247, 'Summer24Prompt24_RunFnib3_V1_DATA'),
-                (383780, 'Summer24Prompt24_RunGnib1_V1_DATA'),
-                (384933, 'Summer24Prompt24_RunGnib2_V1_DATA'),
-                (385814, 'Summer24Prompt24_RunHnib1_V1_DATA'),
-                (386409, 'Summer24Prompt24_RunInib1_V1_DATA'),
+                # https://github.com/cms-jet/JECDatabase/blob/master/tarballs/Summer24Prompt24_RunCnib1_V2_DATA.tar.gz
+                (379412, 'Summer24Prompt24_RunCnib1_V2_DATA'),
+                (380253, 'Summer24Prompt24_RunDnib1_V2_DATA'),
+                (380948, 'Summer24Prompt24_RunEnib1_V2_DATA'),
+                (381944, 'Summer24Prompt24_RunFnib1_V2_DATA'),
+                (382298, 'Summer24Prompt24_RunFnib2_V2_DATA'),
+                (383247, 'Summer24Prompt24_RunFnib3_V2_DATA'),
+                (383780, 'Summer24Prompt24_RunGnib1_V2_DATA'),
+                (384933, 'Summer24Prompt24_RunGnib2_V2_DATA'),
+                (385814, 'Summer24Prompt24_RunHnib1_V2_DATA'),
+                (386409, 'Summer24Prompt24_RunInib1_V2_DATA'),
             )
         else:
             raise RuntimeError('Invalid year: %s' % (str(self.year)))

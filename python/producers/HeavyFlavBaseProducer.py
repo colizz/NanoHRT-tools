@@ -90,10 +90,7 @@ class HeavyFlavBaseProducer(Module, object):
         if self._needsJMECorr:
             ak4JetType = "AK4PFchs" if self._opts['nano_version'] == 'V9' else "AK4PFPuppi"
             self.jetmetCorr = JetMETCorrector(year=self.year, jetType=ak4JetType, **self._jmeSysts)
-            ## ================= FIXME =================
-            fatjetType = "AK4PFPuppi" if self.year == '2024' else "AK8PFPuppi" # AK8PFPuppi not available for 2024
-            ## ========================================
-            self.fatjetCorr = JetMETCorrector(year=self.year, jetType=fatjetType, **self._jmeSysts)
+            self.fatjetCorr = JetMETCorrector(year=self.year, jetType="AK8PFPuppi", **self._jmeSysts)
             self.subjetCorr = JetMETCorrector(year=self.year, jetType="AK4PFPuppi", **self._jmeSysts)
 
         if self._applyJetVetoMap:
