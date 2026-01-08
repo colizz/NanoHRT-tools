@@ -203,3 +203,68 @@ puWeight_UL2018 = lambda: puWeightProducer(pufile_mcUL2018,
                                            doSysVar=True)
 puAutoWeight_UL2018 = lambda: puWeightProducer(
     "auto", pufile_dataUL2018, "pu_mc", "pileup", verbose=False)
+
+# Run 3
+
+# 2022
+pufile_data2022 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2022_355100_362760_GoldenJson-13p6TeV_100bins_WithVar.root" % os.environ[
+    'CMSSW_BASE']
+pufile_mc2022 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/mcPileup2022.root" % os.environ[
+    'CMSSW_BASE']
+puWeight_2022 = lambda: puWeightProducer(pufile_mc2022,
+                                         pufile_data2022,
+                                         "pu_mc",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True)
+
+# 2023
+pufile_data2023 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2023_366442_370790_GoldenJson-13p6TeV_100bins_WithVar.root" % os.environ[
+    'CMSSW_BASE']
+pufile_mc2023 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/mcPileup2023.root" % os.environ[
+    'CMSSW_BASE']
+puWeight_2023 = lambda: puWeightProducer(pufile_mc2023,
+                                         pufile_data2023,
+                                         "pu_mc",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True)
+
+# 2024
+pufile_data2024 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/pileupHistogram-Cert_Collisions2024BCDEFGHI_GoldenJson-13p6TeV_WithVar.root" % os.environ[
+    'CMSSW_BASE']
+pufile_mc2024 = "%s/src/PhysicsTools/NanoHRTTools/python/postprocessing/data/pileup/mcPileup2024.root" % os.environ[
+    'CMSSW_BASE']
+puWeight_2024 = lambda: puWeightProducer(pufile_mc2024,
+                                         pufile_data2024,
+                                         "pu_mc",
+                                         "pileup",
+                                         verbose=False,
+                                         doSysVar=True)
+
+# Standard functions for unified nano versions
+
+# 2016
+puWeight_2016_V9 = lambda: puWeight_UL2016()
+
+# 2017
+puWeight_2017_V9 = lambda: puWeight_UL2017()
+
+# 2018
+puWeight_2018_V9 = lambda: puWeight_UL2018()
+
+# 2022
+puWeight_2022_V12 = lambda: puWeight_2022()
+puWeight_2022_V15 = lambda: puWeight_2022()
+puWeight_2022EE_V12 = lambda: puWeight_2022()
+puWeight_2022EE_V15 = lambda: puWeight_2022()
+
+# 2023
+puWeight_2023_V12 = lambda: puWeight_2023()
+puWeight_2023_V15 = lambda: puWeight_2023()
+puWeight_2023BPix_V12 = lambda: puWeight_2023()
+puWeight_2023BPix_V15 = lambda: puWeight_2023()
+
+# 2024
+puWeight_2024_V12 = lambda: puWeight_2024()
+puWeight_2024_V15 = lambda: puWeight_2024()

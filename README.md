@@ -100,7 +100,7 @@ python runHeavyFlavTrees.py -o /eos/<some-eos-path-on-lxplus>/val_nanov12 --jet-
 
 **4. Validation with early Run 3 setup for the `qcd` channel (deriving sfBDT SFs) [3]**
 
-[3] https://github.com/zichunhao/NanoHRT-tools/tree/wz-calibration
+[3] https://github.com/zichunhao/NanoHRT-tools/tree/hbb-calibration
 
 Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary
 ```python

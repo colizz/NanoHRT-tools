@@ -253,6 +253,7 @@ class HeavyFlavBaseProducer(Module, object):
             self.out.branch(prefix + "phi", "F")
             self.out.branch(prefix + "rawmass", "F")
             self.out.branch(prefix + "sdmass", "F")
+            self.out.branch(prefix + "sdmass_raw", "F")
             self.out.branch(prefix + "regressed_mass", "F")
             self.out.branch(prefix + "tau1", "F")
             self.out.branch(prefix + "tau2", "F")
@@ -450,6 +451,7 @@ class HeavyFlavBaseProducer(Module, object):
             fj.is_qualified = True
             fj.subjets = get_subjets(fj, event.subjets, ('subJetIdx1', 'subJetIdx2'))
             fj.msoftdrop = sumP4(*fj.subjets).M()
+            fj.msoftdrop_raw = sum([sj.rawP4 for sj in fj.subjets], ROOT.Math.PtEtaPhiMVector()).M()
         event._allFatJets = sorted(event._allFatJets, key=lambda x: x.pt, reverse=True)  # sort by pt
 
         # link genjet to fatjet
@@ -710,17 +712,18 @@ class HeavyFlavBaseProducer(Module, object):
         self.out.fillBranch("year", year_dict[self.year])
         self.out.fillBranch("lumiwgt", lumi_dict[self.year])
 
+        # MET filters: follow the recommendation from https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2
         met_filters = bool(
             event.Flag_goodVertices and
             event.Flag_globalSuperTightHalo2016Filter and
-            event.Flag_HBHENoiseFilter and
-            event.Flag_HBHENoiseIsoFilter and
             event.Flag_EcalDeadCellTriggerPrimitiveFilter and
             event.Flag_BadPFMuonFilter and
             event.Flag_BadPFMuonDzFilter and
             event.Flag_eeBadScFilter
         )
-        if self.year in ["2017", "2018"]:
+        if self.year in ["2016APV", "2016", "2017", "2018"]:
+            met_filters = met_filters and event.Flag_HBHENoiseFilter and event.Flag_HBHENoiseIsoFilter
+        if self.year in ["2017", "2018", "2022", "2022EE", "2023", "2023BPix", "2024"]:
             met_filters = met_filters and event.Flag_ecalBadCalibFilter
         self.out.fillBranch("passmetfilters", met_filters)
 
@@ -773,6 +776,7 @@ class HeavyFlavBaseProducer(Module, object):
             self.out.fillBranch(prefix + "phi", fj.phi)
             self.out.fillBranch(prefix + "rawmass", fj.mass)
             self.out.fillBranch(prefix + "sdmass", fj.msoftdrop)
+            self.out.fillBranch(prefix + "sdmass_raw", fj.msoftdrop_raw)
             self.out.fillBranch(prefix + "regressed_mass", fj.regressed_mass)
             self.out.fillBranch(prefix + "tau1", fj.tau1)
             self.out.fillBranch(prefix + "tau2", fj.tau2)

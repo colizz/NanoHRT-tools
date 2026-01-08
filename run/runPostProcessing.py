@@ -315,6 +315,20 @@ def create_metadata(args):
                 filelist = sorted(filelist)
                 md['samples'].append(samp)
                 md['inputfiles'][samp] = filelist
+    elif args.data_json:
+        with open(args.data_json) as f:
+            data_json_dict = json.load(f)
+        print(samp_to_datasets)
+        for samp in samp_to_datasets:
+            filelist = []
+            for dataset in samp_to_datasets[samp]:
+                if dataset not in data_json_dict:
+                    raise RuntimeError('Dataset %s not found in the input file %s' % (dataset, args.data_json))
+                filelist.extend(data_json_dict[dataset])
+            if len(filelist):
+                filelist = sorted(filelist)
+                md['samples'].append(samp)
+                md['inputfiles'][samp] = filelist
     else:
         # use remote files
         for samp in samp_to_datasets:
@@ -660,6 +674,9 @@ def get_arg_parser():
     )
     parser.add_argument('-o', '--outputdir', required=True,
         help='Output directory'
+    )
+    parser.add_argument('--data-json', default=None,
+        help='Data json file. Default: %(default)s'
     )
     parser.add_argument('-m', '--metadata',
         default='metadata.json',

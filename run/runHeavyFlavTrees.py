@@ -108,7 +108,7 @@ def _process(args):
     args.jobdir = os.path.join('jobs_%s' % basename, 'data' if args.run_data else 'mc')
 
     if args.run_data:
-        args.datasets = '%s/%s_%d_DATA.yaml' % (args.sample_dir, channel, year)
+        args.datasets = '%s/%s_%s_DATA.yaml' % (args.sample_dir, channel, year)
         args.extra_transfer = os.path.expandvars(
             '$CMSSW_BASE/src/PhysicsTools/NanoHRTTools/data/JSON/%s' % golden_json[year])
         args.json = golden_json[year]
@@ -122,9 +122,8 @@ def _process(args):
 
     args.imports = [('PhysicsTools.NanoHRTTools.producers.HeavyFlavSFTreeProducer', 'heavyFlavSFTreeFromConfig')]
     if not args.run_data:
-        args.imports.extend([('PhysicsTools.NanoHRTTools.postprocessing.modules.common.puWeightProducer', 'puWeight_UL%s' % year),
+        args.imports.extend([('PhysicsTools.NanoHRTTools.postprocessing.modules.common.puWeightProducer', 'puWeight_%s_%s' % (year, default_config['nano_version'])),
                              ('PhysicsTools.NanoHRTTools.producers.topPtWeightProducer', 'topPtWeight')])
-    print(f"!!debug: args.imports={args.imports}")
 
     # data, or just nominal MC
     if args.run_data or not args.run_syst:
