@@ -30,7 +30,7 @@ This update adapts the framework based on the Run 2 UL setup [1] and two subsequ
 
 [2] https://github.com/lpaizano/NanoHRT-tools/tree/dev/run3
 
-[3] https://github.com/zichunhao/NanoHRT-tools/tree/wz-calibration
+[3] https://github.com/zichunhao/NanoHRT-tools/tree/hbb-calibration
 
 Changes:
 
