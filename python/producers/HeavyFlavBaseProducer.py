@@ -721,7 +721,7 @@ class HeavyFlavBaseProducer(Module, object):
         if self.year in ["2016APV", "2016", "2017", "2018"]:
             met_filters = met_filters and event.Flag_HBHENoiseFilter and event.Flag_HBHENoiseIsoFilter
         if self.year in ["2017", "2018", "2022", "2022EE", "2023", "2023BPix", "2024"]:
-            met_filters = met_filters and event.Flag_ecalBadCalibFilter
+            met_filters = met_filters and event.Flag_ecalBadCalibFilter and event.Flag_hfNoisyHitsFilter
         self.out.fillBranch("passmetfilters", met_filters)
 
         # L1 prefire weights
