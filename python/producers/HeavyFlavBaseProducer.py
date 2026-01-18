@@ -587,10 +587,12 @@ class HeavyFlavBaseProducer(Module, object):
 
             # sfBDT & sj12_masscor_dxysig
             fj.sfBDT = -1
+            fj.is_qualified_for_sfBDT = False
             fj.sj12_masscor_dxysig = 0
             if len(fj.subjets) == 2:
                 sj1, sj2 = fj.subjets
                 if len(sj1.sv_list) > 0 and len(sj2.sv_list) > 0:
+                    fj.is_qualified_for_sfBDT = True
                     sj1_sv, sj2_sv = sj1.sv_list[0], sj2.sv_list[0]
                     sfbdt_inputs = {
                         'fj_2_tau21': fj.tau2 / fj.tau1 if fj.tau1 > 0 else 99,

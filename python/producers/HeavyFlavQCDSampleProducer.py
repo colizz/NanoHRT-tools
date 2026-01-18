@@ -52,15 +52,17 @@ class QCDSampleProducer(HeavyFlavBaseProducer):
 
         self.matchSVToFatJets(event, probe_jets)
 
-        # check if any of two leading fatjets is qualified
+        # check if any of two leading fatjets is qualified (basic kinematic cuts + sfBDT requirement)
+        # - if require_sv_cut is True, only consider fatjets with SV matched to both subjets (have valid sfBDT inputs)
         for fj in probe_jets:
             fj.is_qualified = False
             if len(fj.subjets) == 2 and fj.msoftdrop > 50 and fj.msoftdrop < 200:
-                if not self._opts['run_sfbdt']:
-                    fj.is_qualified = True
-                else:
-                    if fj.sfBDT > self._opts['sfbdt_threshold']:
+                if (self._require_sv_cut and fj.is_qualified_for_sfBDT) or not self._require_sv_cut:
+                    if not self._opts['run_sfbdt']:
                         fj.is_qualified = True
+                    else:
+                        if fj.sfBDT > self._opts['sfbdt_threshold']:
+                            fj.is_qualified = True
 
         if all([fj.is_qualified == False for fj in probe_jets]):
             # no fatjet is qualified, reject event
