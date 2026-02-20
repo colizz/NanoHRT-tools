@@ -196,6 +196,15 @@ To merge the trees, run the same command but add `--post -w ''` (i.e., set `-w` 
 
 ##### Make trees for heavy flavour tagging (bb/cc) or top/W data/MC comparison and scale factor measurement:
 
+Configure the [`runHeavyFlavTrees.py`](run/runHeavyFlavTrees.py) script by updating the `default_config` dictionary as needed. E.g. for 2022/2023:
+
+```python
+default_config.update({
+    'nano_version': 'V12',
+    'jec': True, # should re-compute JECs for NanoAOD v12
+})
+```
+Then run the production:
 ```bash
 python runHeavyFlavTrees.py -i /eos/uscms/store/user/lpcjme/noreplica/NanoHRT/path/to/input -o /path/to/output 
 (--sample-dir custom_samples) --jet-type [ak8,ak15] --channel [photon|qcd|muon|inclusive|higgs|mutagged|simple-matching] --year [2016APV|2016|2017|2018] -n 10 
