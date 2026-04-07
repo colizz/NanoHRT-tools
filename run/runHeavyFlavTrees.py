@@ -19,7 +19,7 @@ default_config = {'nano_version': 'V15', # 'V15', 'V12', 'V9'
                   # JME systematics
                   'jec': False, 'jes': None, 'jes_source': '', 'jes_uncertainty_file_prefix': '',
                   'jer': 'nominal', 'jmr': None, 'met_unclustered': None, 'smearMET': False, 'applyHEMUnc': False,
-                  'jesr_extra_br': True,
+                  'jesr_extra_br': False,
                   }
 
 if default_config['nano_version'] in ['V12', 'V9']:
@@ -94,11 +94,13 @@ def _process(args):
     default_config['channel'] = channel
 
     if year in ("2017", "2018"):
-        args.weight_file = 'samples/xsec_2017.conf'
-    elif year in ("2022", "2022EE", "2023", "2023BPix", "2024"):
+        args.weight_file = 'samples_nanov9/xsec_2017.conf'
+    elif year in ("2022", "2022EE", "2023", "2023BPix"):
+        args.weight_file = 'samples_nanov12/xsec_2022.conf'
+    elif year in ("2024"):
+        args.weight_file = 'samples_nanov15/xsec_2024.conf'
         # args.weight_file = 'samples/xsec_run3.py'
         # args.weight_file = 'samples/xsec_run3_ParT.json'
-        pass
     else:
         raise RuntimeError('Year not supported: %s' % year)
     logging.info(f"year={year}, weight_file={args.weight_file}")
