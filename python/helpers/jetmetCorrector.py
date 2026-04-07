@@ -444,7 +444,7 @@ class JetMETCorrector(object):
             if isMC and self.met_unclustered:
                 if (self.year == 2015 or self.year == 2016 or self.year == 2017 or self.year == 2018):
                     deltaUp = np.array([met.MetUnclustEnUpDeltaX, met.MetUnclustEnUpDeltaY])
-                    deltaDown = deltaUp
+                    deltaDown = np.array([-1.0*met.MetUnclustEnUpDeltaX, -1.0*met.MetUnclustEnUpDeltaY])
                 else:
                     origmet = np.array([met.pt * math.cos(met.phi),met.pt * math.sin(met.phi)])
                     unclusteredup = np.array([met.ptUnclusteredUp*math.cos(met.phiUnclusteredUp),met.ptUnclusteredUp*math.sin(met.phiUnclusteredUp)])
