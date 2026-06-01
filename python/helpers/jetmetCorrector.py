@@ -3,6 +3,7 @@ import tempfile
 import shutil
 import itertools
 import logging
+import math
 import numpy as np
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -62,10 +63,16 @@ class JetCorrector(object):
         self.corrector.setJetEta(jet.eta)
         self.corrector.setRho(rho)
         try:
+            # should work in all eras for Jet, FatJet, and SubJet in Nanov15
             self.corrector.setJetA(jet.area)
         except RuntimeError as e:
-            logger.error(f"Error: {e}; returning None")
-            pass
+            # this area doesn't exist for subjets before V15, logging blows up the .err files
+            # Assign a basic AK4 area so that FactorizedJetCorrector messages don't blow up the .err either
+            # *** Is there something better we can do to identify whether the jet in this block is a subjet?
+            # *** Or should we leave area unset and do something else to suppress the messages?
+            self.corrector.setJetA(0.5) 
+            #logger.error(f"Error: {e}; returning None")
+            pass 
         if level is None:
             return self.corrector.getCorrection()
         else:
@@ -350,7 +357,7 @@ class JetMETCorrector(object):
 
     def correctJetAndMET(self, jets, lowPtJets=None, met=None, rawMET=None, defaultMET=None,
                          rho=None, genjets=[], isMC=True, runNumber=None):
-        assert (not isMC) or (self.jesr_extra_br and (self.jer == 'nominal' and self.jes == None)), "Must run jesr_extra_br=True in nominal."
+        #assert (not isMC) or (self.jesr_extra_br and (self.jer == 'nominal' and self.jes == None)), "Must run jesr_extra_br=True in nominal."
 
         # for MET correction, use 'Jet' (corr_pt>15) and 'CorrT1METJet' (corr_pt<15) collections
         # Type-1 MET correction: https://github.com/cms-sw/cmssw/blob/master/JetMETCorrections/Type1MET/interface/PFJetMETcorrInputProducerT.h
@@ -435,11 +442,19 @@ class JetMETCorrector(object):
             met_shift = sum([j._t1MetDelta for j in itertools.chain(jets, lowPtJets)])
             # MET unclustered energy
             if isMC and self.met_unclustered:
-                delta = np.array([met.MetUnclustEnUpDeltaX, met.MetUnclustEnUpDeltaY])
+                if (self.year == 2015 or self.year == 2016 or self.year == 2017 or self.year == 2018):
+                    deltaUp = np.array([met.MetUnclustEnUpDeltaX, met.MetUnclustEnUpDeltaY])
+                    deltaDown = np.array([-1.0*met.MetUnclustEnUpDeltaX, -1.0*met.MetUnclustEnUpDeltaY])
+                else:
+                    origmet = np.array([met.pt * math.cos(met.phi),met.pt * math.sin(met.phi)])
+                    unclusteredup = np.array([met.ptUnclusteredUp*math.cos(met.phiUnclusteredUp),met.ptUnclusteredUp*math.sin(met.phiUnclusteredUp)])
+                    unclustereddown = np.array([met.ptUnclusteredDown*math.cos(met.phiUnclusteredDown),met.ptUnclusteredDown*math.sin(met.phiUnclusteredDown)])
+                    deltaUp = unclusteredup - origmet
+                    deltaDown = unclustereddown - origmet
             if self.met_unclustered == 'up':
-                met_shift += delta
+                met_shift += deltaUp  # adds this x,y shift to Type1 x,y shift
             elif self.met_unclustered == 'down':
-                met_shift -= delta
+                met_shift += deltaDown
             rawMetP4 = p4(rawMET, eta=None, mass=None)
             newMET = rawMetP4 + ROOT.Math.XYZTVector(met_shift[0], met_shift[1], 0, 0)
             if self.excludeJetsForMET is not None:

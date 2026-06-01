@@ -127,18 +127,21 @@ class HeavyFlavBaseProducer(Module, object):
             self.DeepJet_WP_L = {"2016APV": 0.0508, "2016": 0.0480, "2017": 0.0532, "2018": 0.0490}[self.year]
             self.DeepJet_WP_M = {"2016APV": 0.2598, "2016": 0.2489, "2017": 0.3040, "2018": 0.2783}[self.year]
             self.DeepJet_WP_T = {"2016APV": 0.6502, "2016": 0.6377, "2017": 0.7476, "2018": 0.7100}[self.year]
+            self.BtagForMuonProducer = self.DeepJet_WP_M
         elif self._opts['nano_version'] == 'V12':
             self.ParticleNet_WP_L = {"2022": 0.047, "2022EE": 0.0499, "2023": 0.0358, "2023BPix": 0.0359}[self.year]
             self.ParticleNet_WP_M = {"2022": 0.245, "2022EE": 0.2605, "2023": 0.1917, "2023BPix": 0.1919}[self.year]
             self.ParticleNet_WP_T = {"2022": 0.6734, "2022EE": 0.6915, "2023": 0.6172, "2023BPix": 0.6133}[self.year]
             self.ParticleNet_WP_XT = {"2022": 0.7862, "2022EE": 0.8033, "2023": 0.7515, "2023BPix": 0.7544}[self.year]
             self.ParticleNet_WP_XXT = {"2022": 0.961, "2022EE": 0.9664, "2023": 0.9659, "2023BPix": 0.9688}[self.year]
+            self.BtagForMuonProducer = self.ParticleNet_WP_M
         elif self._opts['nano_version'] == 'V15':
             self.UParTAK4_WP_L = {"2024": 0.0246}[self.year]
             self.UParTAK4_WP_M = {"2024": 0.1272}[self.year]
             self.UParTAK4_WP_T = {"2024": 0.4648}[self.year]
             self.UParTAK4_WP_XT = {"2024": 0.6298}[self.year]
             self.UParTAK4_WP_XXT = {"2024": 0.9739}[self.year]
+            self.BtagForMuonProducer = self.UParTAK4_WP_M
 
         # tagger list
         if self._opts['custom_tagger_list']:

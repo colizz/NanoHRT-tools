@@ -203,6 +203,7 @@ def parse_sample_xsec(cfgfile):
                 if samp in xsec_dict and xsec_dict[samp] != xsec:
                     raise RuntimeError('Inconsistent entries for sample %s' % samp)
                 xsec_dict[samp] = xsec
+                
                 if 'PSweights_' in samp:
                     xsec_dict[samp.replace('PSweights_', '')] = xsec
     return xsec_dict
@@ -394,6 +395,10 @@ def check_job_status(args):
                     else:
                         errormsg = line
                     break
+                if 'Disk quota exceeded' in line:
+                    errormsg = line
+                if 'job attribute PeriodicRelease' in line:
+                    errormsg = line
             if errormsg:
                 logging.debug(logpath + '\n   ' + errormsg)
                 jobids['failed'].append(str(jobid))
@@ -551,7 +556,7 @@ def run_add_weight(args):
     md = load_metadata(args)
     parts_dir = os.path.join(args.outputdir, 'parts')
     status_file = os.path.join(parts_dir, '.success')
-    if os.path.exists(status_file):
+    if os.path.exists(status_file):        
         return
     if not os.path.exists(parts_dir):
         os.makedirs(parts_dir)
